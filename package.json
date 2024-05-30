@@ -1,0 +1,26 @@
+{
+  "name": "pwa-next-template",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.7",
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "sass": "^1.77.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "^14.2.3",
+    "typescript": "^5"
+  }
+}
