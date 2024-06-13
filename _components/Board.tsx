@@ -106,7 +106,8 @@ const Board: React.FC<BoardProps> = ({ boardSize, sushiOptions }) => {
                 border: '1px solid black',
                 textAlign: 'center',
                 backgroundImage: `url('/sushi/${sushi}.webp')`,
-                backgroundSize: 'cover',
+                backgroundSize: '90%',
+                backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
               }}
             ></div>

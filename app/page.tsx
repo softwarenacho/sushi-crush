@@ -16,13 +16,6 @@ export default function Home() {
           <Image src='/sushi/rice.webp' alt='Rice' width={48} height={48} />
           <Image src='/sushi/temaki.webp' alt='Temake' width={48} height={48} />
         </section>
-        <p>
-          Dive into the delicious world of Sushi Crush, a delightful puzzle game
-          where you match and crush sushi pieces to progress through exciting
-          levels. Combine your favorite sushi types and create mouth-watering
-          combos in this charming and visually stunning game. Perfect for sushi
-          lovers and puzzle enthusiasts alike!
-        </p>
         <section>
           <Board
             boardSize={10}
@@ -36,6 +29,13 @@ export default function Home() {
             ]}
           />
         </section>
+        <p>
+          Dive into the delicious world of Sushi Crush, a delightful puzzle game
+          where you match and crush sushi pieces to progress through exciting
+          levels. Combine your favorite sushi types and create mouth-watering
+          combos in this charming and visually stunning game. Perfect for sushi
+          lovers and puzzle enthusiasts alike!
+        </p>
       </main>
     </Suspense>
   );
