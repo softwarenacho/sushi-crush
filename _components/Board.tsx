@@ -11,56 +11,59 @@ interface BoardProps {
 const Board: React.FC<BoardProps> = ({ boardSize, sushiOptions }) => {
   const [board, setBoard] = useState<SushiOption[][]>([[]]);
 
-  const getRandomSushi = (row: number, col: number, board: SushiOption[][]) => {
-    const options = [...sushiOptions];
-    let sushi = options[Math.floor(Math.random() * options.length)];
+  const getRandomSushi = useCallback(
+    (row: number, col: number, board: SushiOption[][]) => {
+      const options = [...sushiOptions];
+      let sushi = options[Math.floor(Math.random() * options.length)];
 
-    const hasConsecutiveSushi = (
-      r: number,
-      c: number,
-      rOffset: number,
-      cOffset: number,
-      count: number,
-    ) => {
-      for (let i = 1; i < count; i++) {
-        const newRow = r + rOffset * i;
-        const newCol = c + cOffset * i;
-        if (
-          newRow < 0 ||
-          newRow >= board.length ||
-          newCol < 0 ||
-          newCol >= board[newRow]?.length ||
-          board[newRow]?.[newCol] !== sushi
-        ) {
-          return false;
+      const hasConsecutiveSushi = (
+        r: number,
+        c: number,
+        rOffset: number,
+        cOffset: number,
+        count: number,
+      ) => {
+        for (let i = 1; i < count; i++) {
+          const newRow = r + rOffset * i;
+          const newCol = c + cOffset * i;
+          if (
+            newRow < 0 ||
+            newRow >= board.length ||
+            newCol < 0 ||
+            newCol >= board[newRow]?.length ||
+            board[newRow]?.[newCol] !== sushi
+          ) {
+            return false;
+          }
         }
+        return true;
+      };
+
+      while (
+        (col >= 2 && hasConsecutiveSushi(row, col, 0, -1, 2)) ||
+        (col >= 1 &&
+          col < (board[row]?.length ?? 0) - 1 &&
+          hasConsecutiveSushi(row, col, 0, -1, 2)) ||
+        (col >= 1 &&
+          col < (board[row]?.length ?? 0) - 2 &&
+          hasConsecutiveSushi(row, col, 0, -1, 3)) ||
+        (row >= 2 && hasConsecutiveSushi(row, col, -1, 0, 2)) ||
+        (row >= 1 &&
+          row < board.length - 1 &&
+          hasConsecutiveSushi(row, col, -1, 0, 2)) ||
+        (row >= 1 &&
+          row < board.length - 2 &&
+          hasConsecutiveSushi(row, col, -1, 0, 3))
+      ) {
+        const filteredOptions = options.filter((option) => option !== sushi);
+        sushi =
+          filteredOptions[Math.floor(Math.random() * filteredOptions.length)];
       }
-      return true;
-    };
 
-    while (
-      (col >= 2 && hasConsecutiveSushi(row, col, 0, -1, 2)) ||
-      (col >= 1 &&
-        col < (board[row]?.length ?? 0) - 1 &&
-        hasConsecutiveSushi(row, col, 0, -1, 2)) ||
-      (col >= 1 &&
-        col < (board[row]?.length ?? 0) - 2 &&
-        hasConsecutiveSushi(row, col, 0, -1, 3)) ||
-      (row >= 2 && hasConsecutiveSushi(row, col, -1, 0, 2)) ||
-      (row >= 1 &&
-        row < board.length - 1 &&
-        hasConsecutiveSushi(row, col, -1, 0, 2)) ||
-      (row >= 1 &&
-        row < board.length - 2 &&
-        hasConsecutiveSushi(row, col, -1, 0, 3))
-    ) {
-      const filteredOptions = options.filter((option) => option !== sushi);
-      sushi =
-        filteredOptions[Math.floor(Math.random() * filteredOptions.length)];
-    }
-
-    return sushi;
-  };
+      return sushi;
+    },
+    [sushiOptions],
+  );
 
   const generateBoard = useCallback(() => {
     const board: SushiOption[][] = [];
@@ -80,8 +83,6 @@ const Board: React.FC<BoardProps> = ({ boardSize, sushiOptions }) => {
   useEffect(() => {
     if (!board[0][0]) generateBoard();
   }, [board, generateBoard]);
-
-  // const board = generateBoard();
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
