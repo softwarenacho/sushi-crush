@@ -14,7 +14,6 @@ const detectMatches = (board: SushiOption[][]): Position[] => {
   const numRows = board.length;
   const numCols = board[0].length;
 
-  // Helper function to find matches in a given direction (horizontal or vertical)
   const findMatchesInDirection = (
     startRow: number,
     startCol: number,
@@ -26,7 +25,6 @@ const detectMatches = (board: SushiOption[][]): Position[] => {
     let row = startRow;
     let col = startCol;
 
-    // Collect consecutive sushis in the specified direction
     while (
       row >= 0 &&
       row < numRows &&
@@ -39,7 +37,6 @@ const detectMatches = (board: SushiOption[][]): Position[] => {
       col += dCol;
     }
 
-    // If the match length is 3, 4, or 5, return the positions; otherwise, return an empty array
     if (matchPositions.length >= 3 && matchPositions.length <= 5) {
       return matchPositions;
     } else {
@@ -47,55 +44,53 @@ const detectMatches = (board: SushiOption[][]): Position[] => {
     }
   };
 
-  // Check for horizontal matches
   for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < numCols; col++) {
       if (col <= numCols - 3) {
         const horizontalMatches3 = findMatchesInDirection(row, col, 0, 1);
         if (horizontalMatches3.length > 0) {
           matches.push(horizontalMatches3);
-          col += horizontalMatches3.length - 1; // Skip over this match in the next iteration
+          col += horizontalMatches3.length - 1;
         }
       }
       if (col <= numCols - 4) {
         const horizontalMatches4 = findMatchesInDirection(row, col, 0, 1);
         if (horizontalMatches4.length > 0) {
           matches.push(horizontalMatches4);
-          col += horizontalMatches4.length - 1; // Skip over this match in the next iteration
+          col += horizontalMatches4.length - 1;
         }
       }
       if (col <= numCols - 5) {
         const horizontalMatches5 = findMatchesInDirection(row, col, 0, 1);
         if (horizontalMatches5.length > 0) {
           matches.push(horizontalMatches5);
-          col += horizontalMatches5.length - 1; // Skip over this match in the next iteration
+          col += horizontalMatches5.length - 1;
         }
       }
     }
   }
 
-  // Check for vertical matches
   for (let col = 0; col < numCols; col++) {
     for (let row = 0; row < numRows; row++) {
       if (row <= numRows - 3) {
         const verticalMatches3 = findMatchesInDirection(row, col, 1, 0);
         if (verticalMatches3.length > 0) {
           matches.push(verticalMatches3);
-          row += verticalMatches3.length - 1; // Skip over this match in the next iteration
+          row += verticalMatches3.length - 1;
         }
       }
       if (row <= numRows - 4) {
         const verticalMatches4 = findMatchesInDirection(row, col, 1, 0);
         if (verticalMatches4.length > 0) {
           matches.push(verticalMatches4);
-          row += verticalMatches4.length - 1; // Skip over this match in the next iteration
+          row += verticalMatches4.length - 1;
         }
       }
       if (row <= numRows - 5) {
         const verticalMatches5 = findMatchesInDirection(row, col, 1, 0);
         if (verticalMatches5.length > 0) {
           matches.push(verticalMatches5);
-          row += verticalMatches5.length - 1; // Skip over this match in the next iteration
+          row += verticalMatches5.length - 1;
         }
       }
     }
@@ -104,58 +99,9 @@ const detectMatches = (board: SushiOption[][]): Position[] => {
   return matches;
 };
 
-const getRandomSushi = (
-  sushiOptions: SushiOption[],
-  row: number,
-  col: number,
-  board: SushiOption[][],
-) => {
+const getRandomSushi = (sushiOptions: SushiOption[]) => {
   const options = [...sushiOptions];
   let sushi = options[Math.floor(Math.random() * options.length)];
-
-  const hasConsecutiveSushi = (
-    r: number,
-    c: number,
-    rOffset: number,
-    cOffset: number,
-    count: number,
-  ) => {
-    for (let i = 1; i < count; i++) {
-      const newRow = r + rOffset * i;
-      const newCol = c + cOffset * i;
-      if (
-        newRow < 0 ||
-        newRow >= board.length ||
-        newCol < 0 ||
-        newCol >= board[newRow]?.length ||
-        board[newRow]?.[newCol] !== sushi
-      ) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  while (
-    (col >= 2 && hasConsecutiveSushi(row, col, 0, -1, 2)) ||
-    (col >= 1 &&
-      col < (board[row]?.length ?? 0) - 1 &&
-      hasConsecutiveSushi(row, col, 0, -1, 2)) ||
-    (col >= 1 &&
-      col < (board[row]?.length ?? 0) - 2 &&
-      hasConsecutiveSushi(row, col, 0, -1, 3)) ||
-    (row >= 2 && hasConsecutiveSushi(row, col, -1, 0, 2)) ||
-    (row >= 1 &&
-      row < board.length - 1 &&
-      hasConsecutiveSushi(row, col, -1, 0, 2)) ||
-    (row >= 1 &&
-      row < board.length - 2 &&
-      hasConsecutiveSushi(row, col, -1, 0, 3))
-  ) {
-    const filteredOptions = options.filter((option) => option !== sushi);
-    sushi = filteredOptions[Math.floor(Math.random() * filteredOptions.length)];
-  }
-
   return sushi;
 };
 
@@ -167,12 +113,13 @@ const generateBoard = (
   for (let i = 0; i < boardSize; i++) {
     const row: SushiOption[] = [];
     for (let j = 0; j < boardSize; j++) {
-      const sushi = getRandomSushi(sushiOptions, i, j, board);
+      const sushi = getRandomSushi(sushiOptions);
       row.push(sushi);
     }
     board.push(row);
   }
   const matches = detectMatches(board);
+  console.log('🚀 ~ matches:', matches);
   if (matches.length > 0) {
     return generateBoard(boardSize, sushiOptions);
   }
