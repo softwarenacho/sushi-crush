@@ -1,3 +1,6 @@
+'use client';
+import { useCallback, useEffect, useState } from 'react';
+
 type SushiOption = 'onigiri' | 'maki' | 'nigiri' | 'noodle' | 'rice' | 'temaki';
 
 interface BoardProps {
@@ -6,6 +9,8 @@ interface BoardProps {
 }
 
 const Board: React.FC<BoardProps> = ({ boardSize, sushiOptions }) => {
+  const [board, setBoard] = useState<SushiOption[][]>([[]]);
+
   const getRandomSushi = (row: number, col: number, board: SushiOption[][]) => {
     const options = [...sushiOptions];
     let sushi = options[Math.floor(Math.random() * options.length)];
@@ -57,7 +62,7 @@ const Board: React.FC<BoardProps> = ({ boardSize, sushiOptions }) => {
     return sushi;
   };
 
-  const generateBoard = () => {
+  const generateBoard = useCallback(() => {
     const board: SushiOption[][] = [];
 
     for (let i = 0; i < boardSize; i++) {
@@ -69,39 +74,56 @@ const Board: React.FC<BoardProps> = ({ boardSize, sushiOptions }) => {
       board.push(row);
     }
 
-    return board;
-  };
+    setBoard(board);
+  }, [boardSize, getRandomSushi]);
 
-  const board = generateBoard();
+  useEffect(() => {
+    if (!board[0][0]) generateBoard();
+  }, [board, generateBoard]);
+
+  // const board = generateBoard();
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${boardSize}, 3rem)`,
-        gridTemplateRows: `repeat(${boardSize}, 3rem)`,
-        background: 'white',
-      }}
-    >
-      {board.map((row, rowIndex) =>
-        row.map((sushi, colIndex) => (
-          <div
-            key={`${rowIndex}-${colIndex}`}
-            style={{
-              width: '3rem',
-              height: '3rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '1px solid black',
-              textAlign: 'center',
-              backgroundImage: `url('/sushi/${sushi}.webp')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          ></div>
-        )),
-      )}
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${boardSize}, 3rem)`,
+          gridTemplateRows: `repeat(${boardSize}, 3rem)`,
+          background: 'white',
+        }}
+      >
+        {board.map((row, rowIndex) =>
+          row.map((sushi, colIndex) => (
+            <div
+              key={`${rowIndex}-${colIndex}`}
+              style={{
+                width: '3rem',
+                height: '3rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid black',
+                textAlign: 'center',
+                backgroundImage: `url('/sushi/${sushi}.webp')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            ></div>
+          )),
+        )}
+      </div>
+      <button
+        style={{
+          marginTop: '2rem',
+          height: '4rem',
+          fontFamily: '"Pacifico", cursive',
+          fontSize: '2rem',
+        }}
+        onClick={() => generateBoard()}
+      >
+        Generate
+      </button>
     </div>
   );
 };
