@@ -1,5 +1,5 @@
-import { Pacifico, Sawarabi_Mincho } from '@next/font/google';
 import type { Metadata, Viewport } from 'next';
+import { Pacifico, Sawarabi_Mincho } from 'next/font/google';
 import './globals.scss';
 
 const pacifico = Pacifico({
