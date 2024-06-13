@@ -1,10 +1,20 @@
+import { Pacifico, Sawarabi_Mincho } from '@next/font/google';
 import type { Metadata, Viewport } from 'next';
 import './globals.scss';
 
-const APP_NAME = 'pwa-next-template';
-const APP_DEFAULT_TITLE = 'PWA Next.js template';
-const APP_DESCRIPTION =
-  'Next.js template with PWA integrated and scoring average 100';
+const pacifico = Pacifico({
+  weight: '400',
+  subsets: ['latin'],
+});
+
+const sawarabiMincho = Sawarabi_Mincho({
+  weight: '400',
+  subsets: ['latin'],
+});
+
+const APP_NAME = 'sushi-crush';
+const APP_DEFAULT_TITLE = 'Sushi Crush';
+const APP_DESCRIPTION = 'Sushi Crush Game';
 
 export const metadata: Metadata = {
   title: APP_NAME,
@@ -21,7 +31,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#a6d6d8',
+  themeColor: '#d498a3',
   minimumScale: 1,
   initialScale: 1,
 };
@@ -53,7 +63,9 @@ export default function RootLayout({
         />
         <meta name='view-transition' content='same-origin' />
       </head>
-      <body>{children}</body>
+      <body className={`${pacifico.className} ${sawarabiMincho.className}`}>
+        {children}
+      </body>
     </html>
   );
 }

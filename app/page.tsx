@@ -6,26 +6,26 @@ export default function Home() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <main className={styles.main}>
-        <Image src='/icons/152x152.webp' alt='Icon' width={152} height={152} />
-        <h1>Nacho&lsquo;s Next.js PWA template</h1>
+        <Image src='/sushi/onigiri.webp' alt='Onigiri' width={64} height={64} />
+        <h1 className='pacifico'>Sushi Crush</h1>
         <p>
-          Use this template to bootstrap your <b>Next.js</b> web application
-          with <b>PWA</b> integrated and set to obtaing <b>100%</b> average on
-          <b>Lighthouse</b> reports
+          Dive into the delicious world of Sushi Crush, a delightful puzzle game
+          where you match and crush sushi pieces to progress through exciting
+          levels. Combine your favorite sushi types and create mouth-watering
+          combos in this charming and visually stunning game. Perfect for sushi
+          lovers and puzzle enthusiasts alike!
         </p>
         <section>
+          <Image src='/sushi/maki.webp' alt='Maki' width={48} height={48} />
+          <Image src='/sushi/nigiri.webp' alt='Nigiri' width={48} height={48} />
           <Image
-            src='/screenshots/100 516x186.gif'
-            alt='Score'
-            width={386}
-            height={144}
+            src='/sushi/noodles.webp'
+            alt='Noodle'
+            width={48}
+            height={48}
           />
-          <Image
-            src='/screenshots/UI 1252x1164.webp'
-            alt='Score'
-            width={386}
-            height={360}
-          />
+          <Image src='/sushi/rice.webp' alt='Rice' width={48} height={48} />
+          <Image src='/sushi/temaki.webp' alt='Temake' width={48} height={48} />
         </section>
       </main>
     </Suspense>

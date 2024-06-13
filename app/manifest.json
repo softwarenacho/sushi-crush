@@ -1,14 +1,14 @@
 {
-  "name": "PWA Next.js template",
-  "short_name": "pwa-next-template",
-  "id": "pwa-next-template",
-  "description": "Next.js template with PWA integrated and scoring average 100",
+  "name": "Sushi Crush",
+  "short_name": "Sushi Crush",
+  "id": "sushi-crush",
+  "description": "Sushi Crush Game",
   "display": "standalone",
   "start_url": "/",
   "scope": "/",
   "orientation": "portrait",
-  "theme_color": "#a6d6d8",
-  "background_color": "#a6d6d8",
+  "theme_color": "#d498a3",
+  "background_color": "#d498a3",
   "dir": "ltr",
   "lang": "en",
   "icons": [
@@ -46,22 +46,22 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/Mobile 742x1292.webp",
-      "sizes": "742x1292",
+      "src": "/screenshots/Mobile 806x1226.webp",
+      "sizes": "806x1226",
       "type": "image/webp",
       "form_factor": "narrow",
       "label": "Mobile"
     },
     {
-      "src": "/screenshots/Desktop 1526x970.webp",
-      "sizes": "1526x970",
+      "src": "/screenshots/Desktop 1356x1012.webp",
+      "sizes": "1356x1012",
       "type": "image/webp",
       "form_factor": "wide",
       "label": "Desktop"
     },
     {
-      "src": "/screenshots/UI 1252x1164.webp",
-      "sizes": "1252x1164",
+      "src": "/screenshots/UI 612x478.webp",
+      "sizes": "612x478",
       "type": "image/webp",
       "label": "UI"
     }
