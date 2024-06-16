@@ -36,22 +36,22 @@
   width: $cell-size;
   height: $cell-size;
   @include flex-center;
-  border: 1px solid $border-color;
+  border: 1px solid $pink-5;
   font-size: 20px;
   cursor: pointer;
   background-size: 90%;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: $background-color;
+  background-color: $white;
   @include transition(background-color, transform);
 
   &.selected {
-    background-color: $secondary-color;
+    background-color: $yellow;
     background-size: 100%;
   }
 
   &.match {
-    background-color: $primary-color;
+    background-color: $red;
   }
 
   &.disappear {
@@ -66,8 +66,8 @@
 .matchIndicator {
   position: absolute;
   font-size: 16px;
-  color: $match-indicator-color;
-  background-color: $match-indicator-bg;
+  color: $white;
+  background-color: $bg;
   padding: 5px;
   border-radius: 5px;
   animation: fade-out $transition-duration forwards;

@@ -8,16 +8,11 @@ $pink-4: #e3aab5;
 $pink-5: #f2b9c4;
 $red: #ff4775;
 $yellow: #ffc640;
-
+$white: white;
 $font-family: 'Pacifico', cursive;
-$primary-color: #ff4775;
-$secondary-color: #ffc640;
-$border-color: #f2b9c4;
 $cell-size: 40px;
 $transition-duration: 1s;
-$background-color: white;
-$match-indicator-bg: rgba(0, 0, 0, 0.7);
-$match-indicator-color: white;
+$bg: rgba(0, 0, 0, 0.7);
 
 @mixin flex-center {
   display: flex;
