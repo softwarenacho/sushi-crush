@@ -85,7 +85,6 @@ export const findMatches = (board: BoardInterface): Match[] => {
       }
     }
   }
-  console.log('🚀 ~ findMatches ~ foundMatches:', foundMatches);
   return foundMatches;
 };
 
