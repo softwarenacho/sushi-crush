@@ -61,6 +61,7 @@ export default function RootLayout({
           sizes='16x16'
           href='/icons/16x16.webp'
         />
+        <meta name='theme-color' content='#d498a3' />
         <meta name='view-transition' content='same-origin' />
       </head>
       <body className={`${pacifico.className} ${sawarabiMincho.className}`}>

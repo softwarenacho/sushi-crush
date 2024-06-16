@@ -26,7 +26,6 @@ const Board = () => {
   const handleMatches = (newBoard: BoardInterface, initialScore: number) => {
     let totalScore = initialScore;
     let foundMatches = findMatches(newBoard);
-
     if (foundMatches.length > 0) {
       setMatches(foundMatches);
       setMatchIndicators(
@@ -215,7 +214,7 @@ const Board = () => {
             setScore(0);
           }}
         >
-          Generate
+          Reset Board
         </button>
       )}
     </div>
