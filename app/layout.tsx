@@ -1,16 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Pacifico, Sawarabi_Mincho } from 'next/font/google';
 import './globals.scss';
-
-const pacifico = Pacifico({
-  weight: '400',
-  subsets: ['latin'],
-});
-
-const sawarabiMincho = Sawarabi_Mincho({
-  weight: '400',
-  subsets: ['latin'],
-});
 
 const APP_NAME = 'sushi-crush';
 const APP_DEFAULT_TITLE = 'Sushi Crush';
@@ -64,9 +53,7 @@ export default function RootLayout({
         <meta name='theme-color' content='#d498a3' />
         <meta name='view-transition' content='same-origin' />
       </head>
-      <body className={`${pacifico.className} ${sawarabiMincho.className}`}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

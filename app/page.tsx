@@ -10,7 +10,7 @@ export default function Home() {
     <Suspense fallback={<div>Loading...</div>}>
       <main className={styles.main}>
         <Image src='/sushi/onigiri.webp' alt='Onigiri' width={64} height={64} />
-        <h1 className='pacifico'>Sushi Crush</h1>
+        <h1>Sushi Crush</h1>
         <section>
           <Image src='/sushi/maki.webp' alt='Maki' width={48} height={48} />
           <Image src='/sushi/nigiri.webp' alt='Nigiri' width={48} height={48} />

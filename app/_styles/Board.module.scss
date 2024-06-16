@@ -10,7 +10,6 @@
   margin-top: 2rem;
   height: 4rem;
   width: 16rem;
-  font-family: $font-family;
   font-size: 2rem;
 }
 
@@ -18,7 +17,6 @@
   font-size: 24px;
   margin-bottom: 20px;
   @include transition(all);
-  font-family: $font-family;
 }
 
 .board {
