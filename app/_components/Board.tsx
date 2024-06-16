@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import styles from '../_styles//Board.module.scss';
+import styles from '../_styles/Board.module.scss';
 
 const figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'];
 const boardSize = 10;
@@ -131,15 +131,20 @@ const Board = () => {
         foundMatches.map((match) => ({ ...match, score: match.length })),
       );
       setAnimating(true);
+
       setTimeout(() => {
         totalScore += processMatches(foundMatches, newBoard);
         fillBoard(newBoard);
+
         setMatches([]);
         setMatchIndicators([]);
-        setAnimating(false);
-        setScore(totalScore);
-        handleMatches(newBoard, totalScore);
-      }, 1000);
+        setBoard([...newBoard]); // Ensure re-render with new board state
+        setTimeout(() => {
+          setAnimating(false);
+          setScore(totalScore);
+          handleMatches(newBoard, totalScore);
+        }, 500); // Delay to show the updated board state before the next match
+      }, 500);
     } else {
       setBoard(newBoard);
     }
@@ -198,7 +203,7 @@ const Board = () => {
           handleMatches(newBoard, score);
           setSelected(null);
           setSwapInfo(null);
-        }, 1000);
+        }, 500);
       } else {
         setSelected([row, col]);
       }
@@ -225,15 +230,10 @@ const Board = () => {
                 } 
                   ${
                     swapInfo &&
-                    swapInfo.row1 === rowIndex &&
-                    swapInfo.col1 === colIndex
-                      ? styles.swap
-                      : ''
-                  } 
-                  ${
-                    swapInfo &&
-                    swapInfo.row2 === rowIndex &&
-                    swapInfo.col2 === colIndex
+                    ((swapInfo.row1 === rowIndex &&
+                      swapInfo.col1 === colIndex) ||
+                      (swapInfo.row2 === rowIndex &&
+                        swapInfo.col2 === colIndex))
                       ? styles.swap
                       : ''
                   } 
@@ -244,11 +244,7 @@ const Board = () => {
                         match.col <= colIndex &&
                         colIndex < match.col + match.length &&
                         match.horizontal,
-                    )
-                      ? styles.match
-                      : ''
-                  } 
-                  ${
+                    ) ||
                     matches.some(
                       (match) =>
                         match.col === colIndex &&

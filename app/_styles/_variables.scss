@@ -13,6 +13,7 @@ $font-family: 'Pacifico', cursive;
 $cell-size: 40px;
 $transition-duration: 1s;
 $bg: rgba(0, 0, 0, 0.7);
+$cell-size: 3rem;
 
 @mixin flex-center {
   display: flex;
