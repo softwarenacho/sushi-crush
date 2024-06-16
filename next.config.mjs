@@ -3,6 +3,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: true,
+  purgeCSS: true,
 };
 const nextConfigFunction = async (phase) => {
   const withPWA = (await import('@ducanh2912/next-pwa')).default({

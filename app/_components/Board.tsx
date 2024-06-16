@@ -212,6 +212,7 @@ const Board = () => {
           onClick={() => {
             setBoard(generateBoard());
             setScore(0);
+            setDisplayedScore(0);
           }}
         >
           Reset Board
