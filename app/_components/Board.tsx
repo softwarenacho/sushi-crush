@@ -1,127 +1,29 @@
 import { useEffect, useState } from 'react';
+import {
+  BoardInterface,
+  Match,
+  MatchIndicator,
+  SwapInfo,
+} from '../_interfaces/Board.interface';
 import styles from '../_styles/Board.module.scss';
-
-const figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'];
-const boardSize = 10;
-
-const getRandomFigure = (): string =>
-  figures[Math.floor(Math.random() * figures.length)];
-
-type Cell = string | null;
-type Board = Cell[][];
-type Match = {
-  row: number;
-  col: number;
-  length: number;
-  horizontal: boolean;
-};
-type SwapInfo = {
-  row1: number;
-  col1: number;
-  row2: number;
-  col2: number;
-} | null;
-type MatchIndicator = Match & { score: number };
-
-const generateBoard = (): Board => {
-  let board: Board = Array(boardSize)
-    .fill(null)
-    .map(() => Array(boardSize).fill(null).map(getRandomFigure));
-
-  while (hasMatches(board)) {
-    board = Array(boardSize)
-      .fill(null)
-      .map(() => Array(boardSize).fill(null).map(getRandomFigure));
-  }
-  return board;
-};
-
-const hasMatches = (board: Board): boolean => {
-  for (let row = 0; row < boardSize; row++) {
-    for (let col = 0; col < boardSize; col++) {
-      if (
-        (col < boardSize - 2 &&
-          board[row][col] === board[row][col + 1] &&
-          board[row][col] === board[row][col + 2]) ||
-        (row < boardSize - 2 &&
-          board[row][col] === board[row + 1][col] &&
-          board[row][col] === board[row + 2][col])
-      ) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
+import {
+  fillBoard,
+  findMatches,
+  generateBoard,
+  processMatches,
+} from '../_utils/Board.helper';
 
 const Board = () => {
-  const [board, setBoard] = useState<Board>([]);
+  const [board, setBoard] = useState<BoardInterface>([]);
   const [score, setScore] = useState<number>(0);
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [animating, setAnimating] = useState<boolean>(false);
   const [matches, setMatches] = useState<Match[]>([]);
   const [matchIndicators, setMatchIndicators] = useState<MatchIndicator[]>([]);
   const [swapInfo, setSwapInfo] = useState<SwapInfo>(null);
+  const [displayedScore, setDisplayedScore] = useState<number>(0);
 
-  useEffect(() => {
-    setBoard(generateBoard());
-  }, []);
-
-  const findMatches = (board: Board): Match[] => {
-    const foundMatches: Match[] = [];
-    for (let row = 0; row < boardSize; row++) {
-      for (let col = 0; col < boardSize; col++) {
-        let matchLength = 1;
-        while (
-          col + matchLength < boardSize &&
-          board[row][col] === board[row][col + matchLength]
-        ) {
-          matchLength++;
-        }
-        if (matchLength >= 3) {
-          foundMatches.push({
-            row,
-            col,
-            length: matchLength,
-            horizontal: true,
-          });
-        }
-        matchLength = 1;
-        while (
-          row + matchLength < boardSize &&
-          board[row][col] === board[row + matchLength][col]
-        ) {
-          matchLength++;
-        }
-        if (matchLength >= 3) {
-          foundMatches.push({
-            row,
-            col,
-            length: matchLength,
-            horizontal: false,
-          });
-        }
-      }
-    }
-    return foundMatches;
-  };
-
-  const processMatches = (matches: Match[], newBoard: Board): number => {
-    let newScore = 0;
-    matches.forEach((match) => {
-      newScore += match.length;
-      for (let i = 0; i < match.length; i++) {
-        if (match.horizontal) {
-          newBoard[match.row][match.col + i] = null;
-        } else {
-          newBoard[match.row + i][match.col] = null;
-        }
-      }
-    });
-    return newScore;
-  };
-
-  const handleMatches = (newBoard: Board, initialScore: number) => {
+  const handleMatches = (newBoard: BoardInterface, initialScore: number) => {
     let totalScore = initialScore;
     let foundMatches = findMatches(newBoard);
 
@@ -131,41 +33,18 @@ const Board = () => {
         foundMatches.map((match) => ({ ...match, score: match.length })),
       );
       setAnimating(true);
-
       setTimeout(() => {
         totalScore += processMatches(foundMatches, newBoard);
         fillBoard(newBoard);
-
         setMatches([]);
         setMatchIndicators([]);
-        setBoard([...newBoard]); // Ensure re-render with new board state
-        setTimeout(() => {
-          setAnimating(false);
-          setScore(totalScore);
-          handleMatches(newBoard, totalScore);
-        }, 500); // Delay to show the updated board state before the next match
+        setBoard([...newBoard]);
+        setAnimating(false);
+        setScore(totalScore);
+        handleMatches(newBoard, totalScore);
       }, 500);
     } else {
       setBoard(newBoard);
-    }
-  };
-
-  const fillBoard = (newBoard: Board) => {
-    for (let col = 0; col < boardSize; col++) {
-      for (let row = boardSize - 1; row >= 0; row--) {
-        if (newBoard[row][col] === null) {
-          for (let fillRow = row; fillRow >= 0; fillRow--) {
-            if (newBoard[fillRow][col] !== null) {
-              newBoard[row][col] = newBoard[fillRow][col];
-              newBoard[fillRow][col] = null;
-              break;
-            }
-          }
-        }
-        if (newBoard[row][col] === null) {
-          newBoard[row][col] = getRandomFigure();
-        }
-      }
     }
   };
 
@@ -174,7 +53,7 @@ const Board = () => {
     col1: number,
     row2: number,
     col2: number,
-  ): Board => {
+  ): BoardInterface => {
     const newBoard = board.map((row) => row.slice());
     [newBoard[row1][col1], newBoard[row2][col2]] = [
       newBoard[row2][col2],
@@ -212,6 +91,7 @@ const Board = () => {
           setAnimating(true);
           setTimeout(() => {
             const newBoard = swap(selectedRow, selectedCol, row, col);
+            setBoard(newBoard);
             handleMatches(newBoard, score);
             setSelected(null);
             setSwapInfo(null);
@@ -227,9 +107,26 @@ const Board = () => {
     }
   };
 
+  useEffect(() => {
+    setBoard(generateBoard());
+  }, []);
+
+  useEffect(() => {
+    if (score > displayedScore) {
+      let currentScore = displayedScore;
+      const incrementInterval = setInterval(() => {
+        currentScore++;
+        setDisplayedScore(currentScore);
+        if (currentScore >= score) {
+          clearInterval(incrementInterval);
+        }
+      }, 50);
+    }
+  }, [displayedScore, score]);
+
   return (
     <div className={styles.game}>
-      <div className={styles.score}>Score: {score}</div>
+      <div className={styles.score}>Score: {displayedScore}</div>
       <div className={styles.board}>
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className={styles.row}>
