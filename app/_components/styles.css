@@ -1,0 +1,81 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.generate {
+  margin-top: 2rem;
+  height: 4rem;
+  width: 16rem;
+  font-family: 'Pacifico', cursive;
+  font-size: 2rem;
+}
+
+.score {
+  font-size: 24px;
+  margin-bottom: 20px;
+  transition: all 1s ease;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  position: relative;
+}
+
+.row {
+  display: contents;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 1s ease, transform 1s ease;
+}
+
+.cell.selected {
+  background-color: yellow;
+}
+
+.cell.match {
+  background-color: red;
+}
+
+.cell.disappear {
+  animation: disappear 1s forwards;
+}
+
+.cell.swap {
+  z-index: 1;
+}
+
+.match-indicator {
+  position: absolute;
+  font-size: 16px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 5px;
+  border-radius: 5px;
+  animation: fade-out 1s forwards;
+}
+
+@keyframes disappear {
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
