@@ -1,23 +1,8 @@
-$black: #1e1e1e;
-$blue: #94a5d4;
-$green: #a9c9aa;
-$pink-1: #ba808b;
-$pink-2: #c78c96;
-$pink-3: #d498a3;
-$pink-4: #e3aab5;
-$pink-5: #f2b9c4;
-$red: #ff4775;
-$yellow: #ffc640;
-
-@mixin flex-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+@import 'variables';
 
 .main {
   @include flex-center;
+  flex-direction: column;
   justify-content: flex-start;
   gap: 2rem;
   padding: 6rem 4rem;

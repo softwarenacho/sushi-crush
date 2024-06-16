@@ -1,0 +1,88 @@
+@import 'variables';
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.generate {
+  margin-top: 2rem;
+  height: 4rem;
+  width: 16rem;
+  font-family: $font-family;
+  font-size: 2rem;
+}
+
+.score {
+  font-size: 24px;
+  margin-bottom: 20px;
+  @include transition(all);
+  font-family: $font-family;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, $cell-size);
+  grid-template-rows: repeat(10, $cell-size);
+  position: relative;
+}
+
+.row {
+  display: contents;
+}
+
+.cell {
+  width: $cell-size;
+  height: $cell-size;
+  @include flex-center;
+  border: 1px solid $border-color;
+  font-size: 20px;
+  cursor: pointer;
+  background-size: 90%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: $background-color;
+  @include transition(background-color, transform);
+
+  &.selected {
+    background-color: $secondary-color;
+    background-size: 100%;
+  }
+
+  &.match {
+    background-color: $primary-color;
+  }
+
+  &.disappear {
+    animation: disappear $transition-duration forwards;
+  }
+
+  &.swap {
+    z-index: 1;
+  }
+}
+
+.matchIndicator {
+  position: absolute;
+  font-size: 16px;
+  color: $match-indicator-color;
+  background-color: $match-indicator-bg;
+  padding: 5px;
+  border-radius: 5px;
+  animation: fade-out $transition-duration forwards;
+}
+
+// Animations
+@keyframes disappear {
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
