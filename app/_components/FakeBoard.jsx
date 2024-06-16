@@ -123,7 +123,7 @@ const FakeBoard = () => {
         setAnimating(false);
         setScore(totalScore);
         handleMatches(newBoard, totalScore);
-      }, 500);
+      }, 1000);
     } else {
       setBoard(newBoard);
     }
