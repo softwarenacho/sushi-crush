@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import {
   BoardInterface,
@@ -180,9 +181,15 @@ const Board = () => {
                       : 'none'
                     : 'none',
                   transition: swapInfo ? 'transform 1s' : 'none',
-                  backgroundImage: `url('/sushi/${cell}.webp')`,
                 }}
-              ></div>
+              >
+                <Image
+                  src={`/sushi/${cell}.webp`}
+                  alt={cell as string}
+                  width={32}
+                  height={32}
+                />
+              </div>
             ))}
           </div>
         ))}
