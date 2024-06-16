@@ -183,6 +183,17 @@ const Board = () => {
     return newBoard;
   };
 
+  const isSwapValid = (
+    row1: number,
+    col1: number,
+    row2: number,
+    col2: number,
+  ): boolean => {
+    const tempBoard = swap(row1, col1, row2, col2);
+    const foundMatches = findMatches(tempBoard);
+    return foundMatches.length > 0;
+  };
+
   const handleClick = (row: number, col: number) => {
     if (animating) return;
     if (selected) {
@@ -191,19 +202,23 @@ const Board = () => {
         (Math.abs(selectedRow - row) === 1 && selectedCol === col) ||
         (Math.abs(selectedCol - col) === 1 && selectedRow === row)
       ) {
-        setSwapInfo({
-          row1: selectedRow,
-          col1: selectedCol,
-          row2: row,
-          col2: col,
-        });
-        setAnimating(true);
-        setTimeout(() => {
-          const newBoard = swap(selectedRow, selectedCol, row, col);
-          handleMatches(newBoard, score);
-          setSelected(null);
-          setSwapInfo(null);
-        }, 500);
+        if (isSwapValid(selectedRow, selectedCol, row, col)) {
+          setSwapInfo({
+            row1: selectedRow,
+            col1: selectedCol,
+            row2: row,
+            col2: col,
+          });
+          setAnimating(true);
+          setTimeout(() => {
+            const newBoard = swap(selectedRow, selectedCol, row, col);
+            handleMatches(newBoard, score);
+            setSelected(null);
+            setSwapInfo(null);
+          }, 500);
+        } else {
+          setSelected([row, col]);
+        }
       } else {
         setSelected([row, col]);
       }
