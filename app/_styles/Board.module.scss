@@ -7,16 +7,20 @@
 }
 
 .generate {
-  margin-top: 2rem;
-  height: 4rem;
-  width: 16rem;
-  font-size: 1rem;
+  @include button;
 }
 
 .score {
-  font-size: 24px;
-  margin-bottom: 20px;
+  @include flex-center;
+  gap: 2rem;
+  margin: 2rem;
+  font-size: 1.5rem;
   @include transition(all);
+  span {
+    @include flex-center;
+    gap: 0.5rem;
+    flex-direction: column;
+  }
 }
 
 .board {

@@ -14,9 +14,10 @@ import {
   processMatches,
 } from '../_utils/Board.helper';
 
-const Board = () => {
+const Board = ({ close }: { close: () => void }) => {
   const [board, setBoard] = useState<BoardInterface>([]);
   const [score, setScore] = useState<number>(0);
+  const [moves, setMoves] = useState<number>(0);
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [animating, setAnimating] = useState<boolean>(false);
   const [matches, setMatches] = useState<Match[]>([]);
@@ -95,6 +96,8 @@ const Board = () => {
             handleMatches(newBoard, score);
             setSelected(null);
             setSwapInfo(null);
+            const newMoves = moves + 1;
+            setMoves(newMoves);
           }, 500);
         } else {
           setSelected([row, col]);
@@ -126,7 +129,6 @@ const Board = () => {
 
   return (
     <div className={styles.game}>
-      <div className={styles.score}>Score: {displayedScore}</div>
       <div className={styles.board}>
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className={styles.row}>
@@ -214,8 +216,22 @@ const Board = () => {
         ))}
       </div>
       {score > 0 && (
+        <div className={styles.score}>
+          <span>
+            Moves <b>{moves}</b>
+          </span>
+          <span>
+            Score <b>{displayedScore}</b>
+          </span>
+          <span>
+            Avg <b>{Math.ceil(score / moves)}</b>
+          </span>
+        </div>
+      )}
+      {score > 0 && (
         <button
           className={styles.generate}
+          role='button'
           onClick={() => {
             setBoard(generateBoard());
             setScore(0);
@@ -225,6 +241,15 @@ const Board = () => {
           Reset Board
         </button>
       )}
+      <button
+        className={styles.generate}
+        role='button'
+        onClick={() => {
+          close();
+        }}
+      >
+        Close
+      </button>
     </div>
   );
 };

@@ -20,6 +20,37 @@ $cell-size: 3rem;
   justify-content: center;
 }
 
+@mixin button {
+  background-color: $yellow;
+  border: 2px solid $black;
+  border-radius: 1rem;
+  box-shadow: $black 4px 4px 0 0;
+  color: $black;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0 1rem;
+  line-height: 4rem;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  min-width: 12rem;
+  margin-top: 2rem;
+  @include transition(all);
+  &:active {
+    background-color: $red;
+    box-shadow: $black 2px 2px 0 0;
+    transform: translate(2px, 2px);
+  }
+  &:hover {
+    background-color: $red;
+    box-shadow: $black 2px 2px 0 0;
+    font-size: 110%;
+  }
+}
+
 @mixin transition($properties...) {
   transition: $properties $transition-duration ease;
 }

@@ -16,12 +16,19 @@
     text-align: center;
   }
   p {
-    max-width: 386px;
+    max-width: 500px;
     line-height: 2;
   }
   section {
     @include flex-center;
     flex-direction: row;
     gap: 1rem;
+  }
+  .newGame {
+    @include button;
+    &:hover,
+    &:active {
+      background-color: $green;
+    }
   }
 }
