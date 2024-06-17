@@ -39,14 +39,31 @@
   cursor: pointer;
   background-color: $white;
   @include transition(all);
+  @media screen and (min-width: 600px) {
+    &:hover {
+      background-color: $yellow;
+      & img {
+        transform: scale(1.1);
+        animation: shake 2s ease-in-out infinite;
+      }
+    }
+  }
   &.selected {
     background-color: $green;
     border: 2px solid $yellow;
     background-size: 100%;
+    & img {
+      transform: scale(1.1);
+      animation: shake 2s ease-in-out infinite;
+    }
   }
   &.match {
     background-color: $pink-5;
     border: 2px solid $red;
+    & img {
+      transform: scale(1.1);
+      animation: shake 2s ease-in-out infinite;
+    }
   }
   &.disappear {
     animation: disappear $transition-duration forwards;
@@ -76,5 +93,41 @@
 @keyframes fade-out {
   to {
     opacity: 0;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -1px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-1px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 1px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-1px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(1px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -1px) rotate(-1deg);
   }
 }
