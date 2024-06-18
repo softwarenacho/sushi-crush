@@ -37,27 +37,23 @@ const hasMatches = (board: BoardInterface): boolean => {
   return false;
 };
 
-
-
 export const findMatches = (board: BoardInterface): Match[] => {
   const foundMatches: Match[] = [];
-  const visited: boolean[][] = Array(boardSize)
-    .fill(false)
-    .map(() => Array(boardSize).fill(false));
+  const visited: boolean[][] = Array.from({ length: boardSize }, () => Array(boardSize).fill(false));
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       if (!visited[row][col]) {
         let matchLength = 1;
-        let horizontal = false;
         while (
           col + matchLength < boardSize &&
           board[row][col] === board[row][col + matchLength]
         ) {
-          visited[row][col + matchLength] = true;
           matchLength++;
-          horizontal = true;
         }
-        if (matchLength >= 3 && horizontal) {
+        if (matchLength >= 3) {
+          for (let i = 0; i < matchLength; i++) {
+            visited[row][col + i] = true;
+          }
           foundMatches.push({
             row,
             col,
@@ -66,15 +62,16 @@ export const findMatches = (board: BoardInterface): Match[] => {
           });
         }
         matchLength = 1;
-        horizontal = false;
         while (
           row + matchLength < boardSize &&
           board[row][col] === board[row + matchLength][col]
         ) {
-          visited[row + matchLength][col] = true;
           matchLength++;
         }
         if (matchLength >= 3) {
+          for (let i = 0; i < matchLength; i++) {
+            visited[row + i][col] = true;
+          }
           foundMatches.push({
             row,
             col,
@@ -87,7 +84,6 @@ export const findMatches = (board: BoardInterface): Match[] => {
   }
   return foundMatches;
 };
-
 
 export const processMatches = (matches: Match[], newBoard: BoardInterface): number => {
   let newScore = 0;

@@ -78,11 +78,12 @@ const Board = ({ close }: { close: () => void }) => {
     if (animating) return;
     if (selected) {
       const [selectedRow, selectedCol] = selected;
-      if (
+      const isAdyacent =
         (Math.abs(selectedRow - row) === 1 && selectedCol === col) ||
-        (Math.abs(selectedCol - col) === 1 && selectedRow === row)
-      ) {
-        if (isSwapValid(selectedRow, selectedCol, row, col)) {
+        (Math.abs(selectedCol - col) === 1 && selectedRow === row);
+      if (isAdyacent) {
+        const isValid = isSwapValid(selectedRow, selectedCol, row, col);
+        if (isValid) {
           setSwapInfo({
             row1: selectedRow,
             col1: selectedCol,
@@ -224,7 +225,7 @@ const Board = ({ close }: { close: () => void }) => {
             Score <b>{displayedScore}</b>
           </span>
           <span>
-            Avg <b>{Math.ceil(score / moves)}</b>
+            Avg <b>{(score / moves).toFixed(1)}</b>
           </span>
         </div>
       )}
