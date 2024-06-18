@@ -28,6 +28,7 @@
   grid-template-columns: repeat(10, $cell-size);
   grid-template-rows: repeat(10, $cell-size);
   position: relative;
+  touch-action: none;
 }
 
 .row {

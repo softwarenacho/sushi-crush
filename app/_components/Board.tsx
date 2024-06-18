@@ -122,7 +122,6 @@ const Board = ({ close }: { close: () => void }) => {
     row: number,
     col: number,
   ): void => {
-    e.preventDefault();
     setFirstCell({
       row,
       col,
