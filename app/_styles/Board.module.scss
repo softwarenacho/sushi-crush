@@ -38,7 +38,7 @@
   width: $cell-size;
   height: $cell-size;
   @include flex-center;
-  border: 1px solid $pink-5;
+  border: 1px dashed $pink-5;
   font-size: 20px;
   cursor: pointer;
   background-color: $white;
@@ -54,7 +54,7 @@
   }
   &.selected {
     background-color: $green;
-    border: 2px solid $yellow;
+    border: 2px dashed $yellow;
     background-size: 100%;
     & img {
       transform: scale(1.1);
@@ -63,7 +63,8 @@
   }
   &.match {
     background-color: $pink-5;
-    border: 2px solid $red;
+    border: 2px dashed $red;
+    animation: sparkle 0.5s infinite;
     & img {
       transform: scale(1.1);
       animation: shake 2s ease-in-out infinite;
@@ -97,6 +98,24 @@
 @keyframes fade-out {
   to {
     opacity: 0;
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 0.5rem $red, 0 0 1rem $yellow, 0 0 0.5rem $blue;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+    box-shadow: 0 0 1rem $green, 0 0 0.5rem $red, 0 0 1rem $yellow;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+    box-shadow: 0 0 0.5rem $red, 0 0 1rem $yellow, 0 0 0.5rem $blue;
   }
 }
 
