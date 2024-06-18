@@ -34,10 +34,15 @@
     flex-direction: column;
     list-style: none;
   }
+  ul {
+    max-height: 400px;
+    overflow: scroll;
+    justify-content: flex-start;
+  }
   li {
     text-align: center;
     margin-top: 0.5rem;
-    line-height: 125%;
+    line-height: 150%;
   }
   .small {
     font-size: 90%;
