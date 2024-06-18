@@ -24,6 +24,12 @@ const Board = ({ close }: { close: () => void }) => {
   const [matchIndicators, setMatchIndicators] = useState<MatchIndicator[]>([]);
   const [swapInfo, setSwapInfo] = useState<SwapInfo>(null);
   const [displayedScore, setDisplayedScore] = useState<number>(0);
+  const [firstCell, setFirstCell] = useState<{
+    row: number;
+    col: number;
+    startX: number;
+    startY: number;
+  } | null>(null);
 
   const handleMatches = (newBoard: BoardInterface, initialScore: number) => {
     let totalScore = initialScore;
@@ -111,6 +117,85 @@ const Board = ({ close }: { close: () => void }) => {
     }
   };
 
+  const handleTouchStart = (
+    e: React.TouchEvent<HTMLDivElement>,
+    row: number,
+    col: number,
+  ): void => {
+    setFirstCell({
+      row,
+      col,
+      startX: e.touches[0].clientX,
+      startY: e.touches[0].clientY,
+    });
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>): void => {
+    if (!firstCell) return;
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const deltaX = endX - firstCell.startX;
+    const deltaY = endY - firstCell.startY;
+    let direction: 'up' | 'down' | 'left' | 'right' | '' = '';
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      direction = deltaX > 0 ? 'right' : 'left';
+    } else {
+      direction = deltaY > 0 ? 'down' : 'up';
+    }
+    handleSwipe(firstCell.row, firstCell.col, direction);
+    setFirstCell(null);
+  };
+
+  const handleSwipe = (
+    row: number,
+    col: number,
+    direction: 'up' | 'down' | 'left' | 'right',
+  ): void => {
+    let targetRow = row;
+    let targetCol = col;
+    switch (direction) {
+      case 'right':
+        targetCol = col + 1;
+        break;
+      case 'left':
+        targetCol = col - 1;
+        break;
+      case 'down':
+        targetRow = row + 1;
+        break;
+      case 'up':
+        targetRow = row - 1;
+        break;
+      default:
+        break;
+    }
+    if (
+      targetRow >= 0 &&
+      targetRow < board.length &&
+      targetCol >= 0 &&
+      targetCol < board[0].length
+    ) {
+      if (isSwapValid(row, col, targetRow, targetCol)) {
+        setSwapInfo({
+          row1: row,
+          col1: col,
+          row2: targetRow,
+          col2: targetCol,
+        });
+        setAnimating(true);
+        setTimeout(() => {
+          const newBoard = swap(row, col, targetRow, targetCol);
+          setBoard(newBoard);
+          handleMatches(newBoard, score);
+          setSelected(null);
+          setSwapInfo(null);
+          const newMoves = moves + 1;
+          setMoves(newMoves);
+        }, 500);
+      }
+    }
+  };
+
   useEffect(() => {
     setBoard(generateBoard());
   }, []);
@@ -137,9 +222,12 @@ const Board = ({ close }: { close: () => void }) => {
               <div
                 key={colIndex}
                 className={`${styles.cell} ${
-                  selected &&
-                  selected[0] === rowIndex &&
-                  selected[1] === colIndex
+                  (selected &&
+                    selected[0] === rowIndex &&
+                    selected[1] === colIndex) ||
+                  (firstCell &&
+                    firstCell.row === rowIndex &&
+                    firstCell.col === colIndex)
                     ? styles.selected
                     : ''
                 } 
@@ -171,6 +259,8 @@ const Board = ({ close }: { close: () => void }) => {
                       : ''
                   }`}
                 onClick={() => handleClick(rowIndex, colIndex)}
+                onTouchStart={(e) => handleTouchStart(e, rowIndex, colIndex)}
+                onTouchEnd={handleTouchEnd}
                 style={{
                   transform: swapInfo
                     ? swapInfo.row1 === rowIndex && swapInfo.col1 === colIndex
