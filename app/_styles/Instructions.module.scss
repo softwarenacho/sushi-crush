@@ -24,21 +24,27 @@
   width: 90%;
   overflow: scroll;
   justify-content: flex-start;
+  section {
+    margin-top: 1rem;
+  }
   ul,
   ol,
   li {
-    list-style: none;
-    text-align: center;
     @include flex-center;
     flex-direction: column;
-    line-height: 125%;
+    list-style: none;
   }
   li {
+    text-align: center;
     margin-top: 0.5rem;
+    line-height: 125%;
+  }
+  .small {
+    font-size: 90%;
     strong {
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
-      font-size: 125%;
+      font-size: 140%;
     }
   }
   h2 {

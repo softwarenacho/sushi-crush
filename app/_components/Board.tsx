@@ -329,7 +329,7 @@ const Board = ({ close }: { close: () => void }) => {
             setDisplayedScore(0);
           }}
         >
-          Reset Board
+          Reset
         </button>
       )}
       <button
