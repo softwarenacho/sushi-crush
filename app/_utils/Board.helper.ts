@@ -38,11 +38,14 @@ const hasMatches = (board: BoardInterface): boolean => {
 };
 
 export const findMatches = (board: BoardInterface): Match[] => {
+  const boardSize = board.length;
   const foundMatches: Match[] = [];
-  const visited: boolean[][] = Array.from({ length: boardSize }, () => Array(boardSize).fill(false));
+  const visitedHorizontal: boolean[][] = Array.from({ length: boardSize }, () => Array(boardSize).fill(false));
+  const visitedVertical: boolean[][] = Array.from({ length: boardSize }, () => Array(boardSize).fill(false));
+
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
-      if (!visited[row][col]) {
+      if (!visitedHorizontal[row][col]) {
         let matchLength = 1;
         while (
           col + matchLength < boardSize &&
@@ -52,7 +55,7 @@ export const findMatches = (board: BoardInterface): Match[] => {
         }
         if (matchLength >= 3) {
           for (let i = 0; i < matchLength; i++) {
-            visited[row][col + i] = true;
+            visitedHorizontal[row][col + i] = true;
           }
           foundMatches.push({
             row,
@@ -61,7 +64,10 @@ export const findMatches = (board: BoardInterface): Match[] => {
             horizontal: true,
           });
         }
-        matchLength = 1;
+      }
+
+      if (!visitedVertical[row][col]) {
+        let matchLength = 1;
         while (
           row + matchLength < boardSize &&
           board[row][col] === board[row + matchLength][col]
@@ -70,7 +76,7 @@ export const findMatches = (board: BoardInterface): Match[] => {
         }
         if (matchLength >= 3) {
           for (let i = 0; i < matchLength; i++) {
-            visited[row + i][col] = true;
+            visitedVertical[row + i][col] = true;
           }
           foundMatches.push({
             row,
