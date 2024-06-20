@@ -11,6 +11,11 @@ export default function Home() {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const [hideInstructions, setHideInstructions] = useState<boolean>(() => {
+    const storedValue = localStorage.getItem('hideInstructions');
+    return storedValue === 'true';
+  });
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <main className={styles.main}>
@@ -33,7 +38,14 @@ export default function Home() {
             <button
               className={styles.newGame}
               role='button'
-              onClick={() => setIsOpen(true)}
+              onClick={() => {
+                if (hideInstructions) {
+                  setNewGame(true);
+                  setIsOpen(false);
+                } else {
+                  setIsOpen(true);
+                }
+              }}
             >
               Play
             </button>
@@ -43,6 +55,7 @@ export default function Home() {
                 openGame={() => {
                   setNewGame(true);
                   setIsOpen(false);
+                  setHideInstructions(true);
                 }}
               />
             )}
