@@ -2,7 +2,7 @@
 
 import Board from '@/app/_components/Board';
 import Image from 'next/image';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Instructions from './_components/Instructions';
 import styles from './_styles/page.module.scss';
 
@@ -10,6 +10,13 @@ export default function Home() {
   const [newGame, setNewGame] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const [hideInstructions, setHideInstructions] = useState<boolean>(false);
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem('hideInstructions');
+    setHideInstructions(storedValue === 'true');
+  }, []);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -33,7 +40,14 @@ export default function Home() {
             <button
               className={styles.newGame}
               role='button'
-              onClick={() => setIsOpen(true)}
+              onClick={() => {
+                if (hideInstructions) {
+                  setNewGame(true);
+                  setIsOpen(false);
+                } else {
+                  setIsOpen(true);
+                }
+              }}
             >
               Play
             </button>
@@ -43,6 +57,7 @@ export default function Home() {
                 openGame={() => {
                   setNewGame(true);
                   setIsOpen(false);
+                  setHideInstructions(true);
                 }}
               />
             )}

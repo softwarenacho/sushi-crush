@@ -1,6 +1,6 @@
 {
-  "name": "pwa-next-template",
-  "version": "0.0.1",
+  "name": "sushi-crush",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

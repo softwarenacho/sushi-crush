@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import styles from '../_styles//Instructions.module.scss';
 
 const Instructions = ({
@@ -8,6 +9,21 @@ const Instructions = ({
   closeModal: () => void;
   openGame: () => void;
 }) => {
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  useEffect(() => {
+    localStorage.setItem('hideInstructions', isChecked.toString());
+  }, [isChecked]);
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem('hideInstructions');
+    setIsChecked(storedValue === 'true');
+  }, []);
+
   return (
     <div className={styles.modalOverlay} onClick={() => closeModal()}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -60,7 +76,11 @@ const Instructions = ({
             this will generate a new board and reset the score.
           </li>
         </ul>
-        <button onClick={() => openGame()} className={styles.button}>
+        <label>
+          <input onChange={handleCheckboxChange} type='checkbox' />
+          Don{"'"}t show again
+        </label>
+        <button onClick={openGame} className={styles.button}>
           Start Now
         </button>
       </div>
