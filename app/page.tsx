@@ -2,7 +2,7 @@
 
 import Board from '@/app/_components/Board';
 import Image from 'next/image';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Instructions from './_components/Instructions';
 import styles from './_styles/page.module.scss';
 
@@ -11,10 +11,12 @@ export default function Home() {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [hideInstructions, setHideInstructions] = useState<boolean>(() => {
+  const [hideInstructions, setHideInstructions] = useState<boolean>(false);
+
+  useEffect(() => {
     const storedValue = localStorage.getItem('hideInstructions');
-    return storedValue === 'true';
-  });
+    setHideInstructions(storedValue === 'true');
+  }, []);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

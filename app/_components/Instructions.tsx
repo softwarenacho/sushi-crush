@@ -9,10 +9,7 @@ const Instructions = ({
   closeModal: () => void;
   openGame: () => void;
 }) => {
-  const [isChecked, setIsChecked] = useState<boolean>(() => {
-    const storedValue = localStorage.getItem('hideInstructions');
-    return storedValue === 'true';
-  });
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -21,6 +18,11 @@ const Instructions = ({
   useEffect(() => {
     localStorage.setItem('hideInstructions', isChecked.toString());
   }, [isChecked]);
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem('hideInstructions');
+    setIsChecked(storedValue === 'true');
+  }, []);
 
   return (
     <div className={styles.modalOverlay} onClick={() => closeModal()}>
