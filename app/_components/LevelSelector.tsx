@@ -92,44 +92,41 @@ const LevelSelectorModal = ({
               handleLevelClick(level.level)
             }
           >
-            {getState(level.level) === 'played' ||
-              (level.level === 1 && (
-                <>
-                  <span className={styles.levelNumber}>{level.level}</span>
-                  <div className={styles.stars}>
-                    {[1, 2, 3].map((n) => {
-                      if (conditionStar(n, level.level)) {
-                        return (
-                          <Image
-                            key={`Level ${level.level} Star ${n}`}
-                            src='/icons/star-fill.png'
-                            alt='Star Full'
-                            width={16}
-                            height={16}
-                          />
-                        );
-                      } else {
-                        return (
-                          <Image
-                            key={`Level ${level.level} Star ${n}`}
-                            src='/icons/star-empty.png'
-                            alt='Star Empty'
-                            width={16}
-                            height={16}
-                          />
-                        );
-                      }
-                    })}
-                  </div>
-                </>
-              ))}
-            {getState(level.level) !== 'played' &&
-              level.level !== 1 &&
+            {(getState(level.level) === 'played' || level.level === 1) && (
+              <>
+                <span className={styles.levelNumber}>{level.level}</span>
+                <div className={styles.stars}>
+                  {[1, 2, 3].map((n) => {
+                    if (conditionStar(n, level.level)) {
+                      return (
+                        <Image
+                          key={`Level ${level.level} Star ${n}`}
+                          src='/icons/star-fill.png'
+                          alt='Star Full'
+                          width={16}
+                          height={16}
+                        />
+                      );
+                    } else {
+                      return (
+                        <Image
+                          key={`Level ${level.level} Star ${n}`}
+                          src='/icons/star-empty.png'
+                          alt='Star Empty'
+                          width={16}
+                          height={16}
+                        />
+                      );
+                    }
+                  })}
+                </div>
+              </>
+            )}
+            {(getState(level.level) !== 'played' || level.level !== 1) &&
               getState(level.level - 1) === 'played' && (
                 <span className={styles.levelNumber}>{level.level}</span>
               )}
-            {getState(level.level - 1) !== 'played' &&
-              level.level !== 1 &&
+            {(getState(level.level - 1) !== 'played' || level.level !== 1) &&
               getState(level.level) === 'locked' && (
                 <Image
                   key={`Locked level`}
