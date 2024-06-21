@@ -11,36 +11,145 @@ const Levels = () => {
   const [selectedLevel, setLevel] = useState(0);
 
   const firstLevelsFigures = ['onigiri', 'maki', 'nigiri', 'noodle'];
+  const secondLevelsFigures = [...firstLevelsFigures, 'rice'];
+  const thirdLevelsFigures = [...secondLevelsFigures, 'temaki'];
 
   const levels = [
     {
-      number: 1,
-      state: 'unlocked',
+      level: 1,
       stars: 0,
       figures: firstLevelsFigures,
+      size: 5,
       goal: {
+        level: 1,
         score: 20,
         stars: {
           1: { moves: 10 },
-          2: { moves: 7 },
-          3: { moves: 5, time: 120 },
+          2: { moves: 8 },
+          3: { moves: 5 },
         },
       },
     },
     {
-      number: 2,
-      state: 'locked',
+      level: 2,
       stars: 0,
       figures: firstLevelsFigures,
+      size: 6,
+      goal: {
+        level: 2,
+        score: 50,
+        stars: {
+          1: { moves: 20 },
+          2: { moves: 15 },
+          3: { moves: 10 },
+        },
+      },
     },
-    { number: 3, state: 'locked', stars: 0 },
-    { number: 4, state: 'locked', stars: 0 },
-    { number: 5, state: 'locked', stars: 0 },
-    { number: 6, state: 'locked', stars: 0 },
-    { number: 7, state: 'locked', stars: 0 },
-    { number: 8, state: 'locked', stars: 0 },
-    { number: 9, state: 'locked', stars: 0 },
-    { number: 10, state: 'locked', stars: 0 },
+    {
+      level: 3,
+      stars: 0,
+      figures: firstLevelsFigures,
+      size: 6,
+      goal: {
+        level: 3,
+        score: 75,
+        stars: {
+          1: { moves: 30 },
+          2: { moves: 20 },
+          3: { moves: 15 },
+        },
+      },
+    },
+    {
+      level: 4,
+      stars: 0,
+      figures: secondLevelsFigures,
+      size: 8,
+      goal: {
+        level: 4,
+        score: 50,
+        stars: {
+          1: { moves: 17 },
+          2: { moves: 14 },
+          3: { moves: 10 },
+        },
+      },
+    },
+    {
+      level: 5,
+      stars: 0,
+      figures: secondLevelsFigures,
+      size: 8,
+      goal: {
+        level: 5,
+        score: 100,
+        stars: {
+          1: { moves: 40 },
+          2: { moves: 25 },
+          3: { moves: 20 },
+        },
+      },
+    },
+    {
+      level: 6,
+      stars: 0,
+      figures: secondLevelsFigures,
+      size: 8,
+      goal: {
+        level: 6,
+        score: 150,
+        stars: {
+          1: { moves: 50 },
+          2: { moves: 35 },
+          3: { moves: 25 },
+        },
+      },
+    },
+    {
+      level: 7,
+      stars: 0,
+      figures: thirdLevelsFigures,
+      size: 10,
+      goal: {
+        level: 7,
+        score: 100,
+        stars: {
+          1: { moves: 50 },
+          2: { moves: 30 },
+          3: { moves: 20 },
+        },
+      },
+    },
+    {
+      level: 8,
+      stars: 0,
+      figures: thirdLevelsFigures,
+      size: 10,
+      goal: {
+        level: 8,
+        score: 150,
+        stars: {
+          1: { moves: 50 },
+          2: { moves: 30 },
+          3: { moves: 20 },
+        },
+      },
+    },
+    {
+      level: 9,
+      stars: 0,
+      figures: thirdLevelsFigures,
+      size: 12,
+      goal: {
+        level: 9,
+        score: 200,
+        stars: {
+          1: { moves: 80 },
+          2: { moves: 50 },
+          3: { moves: 35 },
+        },
+      },
+    },
   ] as Level[];
 
   return (
@@ -63,7 +172,7 @@ const Levels = () => {
       {!!selectedLevel && (
         <Board
           close={() => setLevel(0)}
-          size={5}
+          size={levels[selectedLevel - 1].size}
           figures={levels[selectedLevel - 1].figures}
           goal={levels[selectedLevel - 1].goal}
         />

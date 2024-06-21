@@ -17,6 +17,11 @@ import useAudio from '../_utils/useAudio';
 import useBgSound from '../_utils/useBackground';
 import { Star } from './LevelSelector';
 
+export interface WinLevel {
+  stars: number;
+  level: number;
+}
+
 const Board = ({
   close,
   size = 10,
@@ -27,6 +32,7 @@ const Board = ({
   size?: number;
   figures?: string[];
   goal?: {
+    level: number;
     time?: number;
     score?: number;
     stars: {
@@ -42,6 +48,7 @@ const Board = ({
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [animating, setAnimating] = useState<boolean>(false);
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [won, setWon] = useState<WinLevel | null>(null);
   const [matches, setMatches] = useState<Match[]>([]);
   const [matchIndicators, setMatchIndicators] = useState<MatchIndicator[]>([]);
   const [swapInfo, setSwapInfo] = useState<SwapInfo>(null);
@@ -54,6 +61,7 @@ const Board = ({
   } | null>(null);
   const [bgMusicOn, setBgMusicOn] = useState(false);
   const [sfxOn, setSfxOn] = useState(false);
+
   const { play: matchSound } = useAudio('/sounds/match.mp3');
   const { play: selectSound } = useAudio('/sounds/select.mp3');
   const { play: backgroundSound, stop: stopBgSound } = useBgSound(
@@ -72,24 +80,6 @@ const Board = ({
     const newValue = !sfxOn;
     setSfxOn(newValue);
     localStorage.setItem('sfxOn', JSON.stringify(newValue));
-  };
-
-  const resolveGoal = () => {
-    if (goal?.score) {
-      if (goal.score <= score) {
-        setGameOver(true);
-        if (goal.stars[3].moves && moves <= goal.stars[3].moves) {
-          // return alert('GOAL ACCOMPLISHED 3 stars');
-        }
-        if (goal.stars[2].moves && moves <= goal.stars[2].moves) {
-          // return alert('GOAL ACCOMPLISHED 2 stars');
-        }
-        if (goal.stars[1].moves && moves <= goal.stars[1].moves) {
-          // return alert('GOAL ACCOMPLISHED 1 star');
-        }
-        // return alert('GAME OVER');
-      }
-    }
   };
 
   const handleMatches = (newBoard: BoardInterface, initialScore: number) => {
@@ -261,9 +251,58 @@ const Board = ({
     }
   };
 
+  const calculateStars = () => {
+    let stars = 0;
+    if (goal?.score) {
+      if (goal.score <= score) {
+        if (goal.stars[1].moves && moves <= goal.stars[1].moves) {
+          stars = 1;
+        }
+        if (goal.stars[2].moves && moves <= goal.stars[2].moves) {
+          stars = 2;
+        }
+        if (goal.stars[3].moves && moves <= goal.stars[3].moves) {
+          stars = 3;
+        }
+      }
+    }
+    return stars;
+  };
+
+  const setCompleteLevel = async (win: WinLevel) => {
+    const localLevels = await JSON.parse(
+      localStorage.getItem('levels') as string,
+    );
+    if (localLevels) {
+      const newLevels = localLevels.map((lev: WinLevel) => {
+        if (lev.level === win.level && lev.stars < win.stars) {
+          return win;
+        }
+        return lev;
+      });
+      if (!newLevels.find((lev: WinLevel) => lev.level === win.level)) {
+        localStorage.setItem('levels', JSON.stringify([...newLevels, win]));
+      }
+    } else {
+      localStorage.setItem('levels', JSON.stringify([win]));
+    }
+  };
+
+  useEffect(() => {
+    if (goal && gameOver) {
+      const calculateWin = {
+        stars: calculateStars(),
+        level: goal.level,
+      };
+      setCompleteLevel(calculateWin);
+      setWon(calculateWin);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameOver]);
+
   useEffect(() => {
     if (goal && displayedScore === score) {
-      resolveGoal();
+      calculateStars() > 0 && setGameOver(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayedScore, score]);
@@ -300,6 +339,67 @@ const Board = ({
 
   return (
     <div className={styles.game}>
+      {goal && (
+        <div className={styles.goals}>
+          <h2>Goals</h2>
+          <div className={styles.scores}>
+            <p>
+              Score <b>{goal.score}</b> points to win
+            </p>
+            <p>
+              <span className={styles.stars}>
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+              </span>
+              <b>{goal.stars[1].moves}</b> moves
+            </p>
+            <p>
+              <span className={styles.stars}>
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+              </span>
+              <b>{goal.stars[2].moves}</b> moves
+            </p>
+            <p>
+              <span className={styles.stars}>
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+              </span>
+              <b>{goal.stars[3].moves}</b> moves
+            </p>
+          </div>
+        </div>
+      )}
       <div
         className={`${styles.board} ${gameOver ? styles.win : ''}`}
         style={{
@@ -399,7 +499,36 @@ const Board = ({
           </div>
         ))}
       </div>
-      {gameOver && <h2 className={styles.won}>Level Completed!</h2>}
+      {won && (
+        <>
+          <h2 className={styles.won}>Level {won.level} Completed!</h2>
+          <div className={styles.stars}>
+            {[1, 2, 3].map((n) => {
+              if (n <= won.stars) {
+                return (
+                  <Image
+                    key={`Level ${won.level} Star ${n}`}
+                    src='/icons/star-fill.png'
+                    alt='Star Full'
+                    width={16}
+                    height={16}
+                  />
+                );
+              } else {
+                return (
+                  <Image
+                    key={`Level ${won.level} Star ${n}`}
+                    src='/icons/star-empty.png'
+                    alt='Star Empty'
+                    width={16}
+                    height={16}
+                  />
+                );
+              }
+            })}
+          </div>
+        </>
+      )}
       {score > 0 && (
         <div className={styles.score}>
           <span>

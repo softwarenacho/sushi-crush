@@ -6,6 +6,28 @@
   align-items: center;
 }
 
+.goals,
+.scores {
+  @include flex-center;
+  flex-direction: column;
+  h2 {
+    margin-bottom: 1rem;
+  }
+  p {
+    @include flex-center;
+  }
+  b {
+    margin: 0 0.5rem;
+  }
+  margin-bottom: 1rem;
+}
+
+.stars {
+  @include flex-center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
 .generate {
   @include button;
 }
