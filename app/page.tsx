@@ -17,8 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     const storedValue = localStorage.getItem('hideInstructions');
-    const checked = storedValue === 'true';
-    setHideInstructions(checked);
+    setHideInstructions(storedValue === 'true');
   }, []);
 
   return (
@@ -70,7 +69,7 @@ export default function Home() {
                 onChange={() => setHideInstructions(!hideInstructions)}
                 type='checkbox'
               />
-              Hide instructions
+              Don{"'"}t show instructions
             </label>
             {isOpen && (
               <Instructions
