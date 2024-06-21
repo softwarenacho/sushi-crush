@@ -64,6 +64,11 @@ const Board = ({
 
   const { play: matchSound } = useAudio('/sounds/match.mp3');
   const { play: selectSound } = useAudio('/sounds/select.mp3');
+  const { play: playWinSound, stop: stopWinSound } = useBgSound(
+    '/sounds/end.mp3',
+    0.2,
+    true,
+  );
   const { play: backgroundSound, stop: stopBgSound } = useBgSound(
     '/sounds/bg.mp3',
     0.2,
@@ -225,9 +230,9 @@ const Board = ({
         break;
     }
     if (
-      targetRow >= 0 &&
+      targetRow >= 1 &&
       targetRow < board.length &&
-      targetCol >= 0 &&
+      targetCol >= 1 &&
       targetCol < board[0].length
     ) {
       if (isSwapValid(row, col, targetRow, targetCol)) {
@@ -282,6 +287,8 @@ const Board = ({
       });
       if (!newLevels.find((lev: WinLevel) => lev.level === win.level)) {
         localStorage.setItem('levels', JSON.stringify([...newLevels, win]));
+      } else {
+        localStorage.setItem('levels', JSON.stringify(newLevels));
       }
     } else {
       localStorage.setItem('levels', JSON.stringify([win]));
@@ -295,6 +302,8 @@ const Board = ({
         level: goal.level,
       };
       setCompleteLevel(calculateWin);
+      stopBgSound();
+      playWinSound();
       setWon(calculateWin);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -584,6 +593,7 @@ const Board = ({
         onClick={() => {
           close();
           stopBgSound();
+          stopWinSound();
         }}
       >
         Close
