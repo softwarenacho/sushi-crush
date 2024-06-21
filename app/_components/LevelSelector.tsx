@@ -122,11 +122,13 @@ const LevelSelectorModal = ({
                 </div>
               </>
             )}
-            {(getState(level.level) !== 'played' || level.level !== 1) &&
+            {getState(level.level) !== 'played' &&
+              level.level !== 1 &&
               getState(level.level - 1) === 'played' && (
                 <span className={styles.levelNumber}>{level.level}</span>
               )}
-            {(getState(level.level - 1) !== 'played' || level.level !== 1) &&
+            {getState(level.level - 1) !== 'played' &&
+              level.level !== 1 &&
               getState(level.level) === 'locked' && (
                 <Image
                   key={`Locked level`}
