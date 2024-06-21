@@ -30,12 +30,15 @@ export default function Home() {
           match-3 puzzle game built using React and Next.js.
         </p>
         <p>
-          Players swap adjacent sushi pieces on a board to create rows or
-          columns of three or more identical pieces.
+          <b>Infinite Mode:</b> Play endlessly to achieve the highest score
+          possible and the best average. Keep matching sushi pieces and see how
+          far you can go!
         </p>
         <p>
-          The game continues infinitely to achieve the highest score possible
-          and the best average.
+          <b>Levels Mode:</b> Challenge yourself with progressively harder
+          levels, each with its own goals. Complete the goals to earn up to 3
+          stars and unlock new levels. Can you conquer all the levels and become
+          a sushi master?
         </p>
         <p>
           Source Code:
@@ -83,6 +86,15 @@ export default function Home() {
             }}
           />
         )}
+        <p>
+          <a
+            href='/attributions.html'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Attributions
+          </a>
+        </p>
       </main>
     </Suspense>
   );
