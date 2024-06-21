@@ -24,6 +24,11 @@
     flex-direction: row;
     gap: 1rem;
   }
+  label {
+    @include flex-center;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
   .newGame {
     @include button;
     &:hover,

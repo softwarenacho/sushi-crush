@@ -7,7 +7,7 @@ const Instructions = ({
   openGame,
 }: {
   closeModal: () => void;
-  openGame: () => void;
+  openGame: (hide: boolean) => void;
 }) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
@@ -77,10 +77,14 @@ const Instructions = ({
           </li>
         </ul>
         <label>
-          <input onChange={handleCheckboxChange} type='checkbox' />
+          <input
+            checked={isChecked}
+            onChange={handleCheckboxChange}
+            type='checkbox'
+          />
           Don{"'"}t show again
         </label>
-        <button onClick={openGame} className={styles.button}>
+        <button onClick={() => openGame(isChecked)} className={styles.button}>
           Start Now
         </button>
       </div>

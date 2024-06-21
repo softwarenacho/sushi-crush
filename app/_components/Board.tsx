@@ -13,6 +13,8 @@ import {
   generateBoard,
   processMatches,
 } from '../_utils/Board.helper';
+import useAudio from '../_utils/useAudio';
+import useBgSound from '../_utils/useBackground';
 
 const Board = ({ close }: { close: () => void }) => {
   const [board, setBoard] = useState<BoardInterface>([]);
@@ -30,6 +32,26 @@ const Board = ({ close }: { close: () => void }) => {
     startX: number;
     startY: number;
   } | null>(null);
+  const [bgMusicOn, setBgMusicOn] = useState(false);
+  const [sfxOn, setSfxOn] = useState(false);
+  const { play: pointSound } = useAudio('/sounds/match.mp3');
+  const { play: backgroundSound, stop: stopBgSound } = useBgSound(
+    '/sounds/bg.mp3',
+    0.2,
+    true,
+  );
+  const toggleBgMusic = () => {
+    bgMusicOn ? stopBgSound() : backgroundSound();
+    const newValue = !bgMusicOn;
+    setBgMusicOn(newValue);
+    localStorage.setItem('bgMusicOn', JSON.stringify(newValue));
+  };
+
+  const toggleSfx = () => {
+    const newValue = !sfxOn;
+    setSfxOn(newValue);
+    localStorage.setItem('sfxOn', JSON.stringify(newValue));
+  };
 
   const handleMatches = (newBoard: BoardInterface, initialScore: number) => {
     let totalScore = initialScore;
@@ -40,6 +62,7 @@ const Board = ({ close }: { close: () => void }) => {
         foundMatches.map((match) => ({ ...match, score: match.length })),
       );
       setAnimating(true);
+      if (sfxOn) pointSound();
       setTimeout(() => {
         totalScore += processMatches(foundMatches, newBoard);
         fillBoard(newBoard);
@@ -197,6 +220,21 @@ const Board = ({ close }: { close: () => void }) => {
   };
 
   useEffect(() => {
+    const storedBgMusic = localStorage.getItem('bgMusicOn');
+    const storedSfx = localStorage.getItem('sfxOn');
+    if (storedBgMusic !== null) {
+      setBgMusicOn(JSON.parse(storedBgMusic));
+    }
+    if (storedSfx !== null) {
+      setSfxOn(JSON.parse(storedSfx));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (bgMusicOn) backgroundSound();
+  }, [backgroundSound, bgMusicOn]);
+
+  useEffect(() => {
     setBoard(generateBoard());
   }, []);
 
@@ -319,6 +357,28 @@ const Board = ({ close }: { close: () => void }) => {
           </span>
         </div>
       )}
+      <div className={styles.soundSwitch}>
+        <label className={styles.switch}>
+          <input type='checkbox' checked={bgMusicOn} onChange={toggleBgMusic} />
+          <span className={styles.slider}></span>
+          <Image
+            src='/icons/music.webp'
+            width={32}
+            height={32}
+            alt='Toggle Background Music'
+          />
+        </label>
+        <label className={styles.switch}>
+          <input type='checkbox' checked={sfxOn} onChange={toggleSfx} />
+          <span className={styles.slider}></span>
+          <Image
+            src='/icons/sound.webp'
+            width={32}
+            height={32}
+            alt='Toggle Background Music'
+          />
+        </label>
+      </div>
       {score > 0 && (
         <button
           className={styles.generate}
@@ -337,6 +397,7 @@ const Board = ({ close }: { close: () => void }) => {
         role='button'
         onClick={() => {
           close();
+          stopBgSound();
         }}
       >
         Close

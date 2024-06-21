@@ -8,14 +8,17 @@ import styles from './_styles/page.module.scss';
 
 export default function Home() {
   const [newGame, setNewGame] = useState<boolean>(false);
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const [hideInstructions, setHideInstructions] = useState<boolean>(false);
 
   useEffect(() => {
+    localStorage.setItem('hideInstructions', (!hideInstructions).toString());
+  }, [hideInstructions]);
+
+  useEffect(() => {
     const storedValue = localStorage.getItem('hideInstructions');
-    setHideInstructions(storedValue === 'true');
+    const checked = storedValue === 'true';
+    setHideInstructions(checked);
   }, []);
 
   return (
@@ -51,13 +54,21 @@ export default function Home() {
             >
               Play
             </button>
+            <label>
+              <input
+                checked={hideInstructions}
+                onChange={() => setHideInstructions(!hideInstructions)}
+                type='checkbox'
+              />
+              Hide instructions
+            </label>
             {isOpen && (
               <Instructions
                 closeModal={() => setIsOpen(false)}
-                openGame={() => {
+                openGame={(hide: boolean) => {
                   setNewGame(true);
                   setIsOpen(false);
-                  setHideInstructions(true);
+                  setHideInstructions(hide);
                 }}
               />
             )}
