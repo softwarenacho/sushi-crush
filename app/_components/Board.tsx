@@ -22,8 +22,8 @@ const Board = ({
   figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'],
 }: {
   close: () => void;
-  size: number;
-  figures: string[];
+  size?: number;
+  figures?: string[];
 }) => {
   const [board, setBoard] = useState<BoardInterface>([]);
   const [score, setScore] = useState<number>(0);
