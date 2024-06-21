@@ -15,21 +15,40 @@ import {
 } from '../_utils/Board.helper';
 import useAudio from '../_utils/useAudio';
 import useBgSound from '../_utils/useBackground';
+import { Star } from './LevelSelector';
+
+export interface WinLevel {
+  stars: number;
+  level: number;
+}
 
 const Board = ({
   close,
   size = 10,
   figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'],
+  goal,
 }: {
   close: () => void;
   size?: number;
   figures?: string[];
+  goal?: {
+    level: number;
+    time?: number;
+    score?: number;
+    stars: {
+      1: Star;
+      2: Star;
+      3: Star;
+    };
+  };
 }) => {
   const [board, setBoard] = useState<BoardInterface>([]);
   const [score, setScore] = useState<number>(0);
   const [moves, setMoves] = useState<number>(0);
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [animating, setAnimating] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [won, setWon] = useState<WinLevel | null>(null);
   const [matches, setMatches] = useState<Match[]>([]);
   const [matchIndicators, setMatchIndicators] = useState<MatchIndicator[]>([]);
   const [swapInfo, setSwapInfo] = useState<SwapInfo>(null);
@@ -42,6 +61,7 @@ const Board = ({
   } | null>(null);
   const [bgMusicOn, setBgMusicOn] = useState(false);
   const [sfxOn, setSfxOn] = useState(false);
+
   const { play: matchSound } = useAudio('/sounds/match.mp3');
   const { play: selectSound } = useAudio('/sounds/select.mp3');
   const { play: backgroundSound, stop: stopBgSound } = useBgSound(
@@ -113,6 +133,7 @@ const Board = ({
   };
 
   const handleClick = (row: number, col: number) => {
+    if (gameOver) return;
     if (animating) return;
     if (sfxOn) selectSound();
     if (selected) {
@@ -155,6 +176,7 @@ const Board = ({
     row: number,
     col: number,
   ): void => {
+    if (gameOver) return;
     setFirstCell({
       row,
       col,
@@ -229,25 +251,65 @@ const Board = ({
     }
   };
 
+  const calculateStars = () => {
+    let stars = 0;
+    if (goal?.score) {
+      if (goal.score <= score) {
+        if (goal.stars[1].moves && moves <= goal.stars[1].moves) {
+          stars = 1;
+        }
+        if (goal.stars[2].moves && moves <= goal.stars[2].moves) {
+          stars = 2;
+        }
+        if (goal.stars[3].moves && moves <= goal.stars[3].moves) {
+          stars = 3;
+        }
+      }
+    }
+    return stars;
+  };
+
+  const setCompleteLevel = async (win: WinLevel) => {
+    const localLevels = await JSON.parse(
+      localStorage.getItem('levels') as string,
+    );
+    if (localLevels) {
+      const newLevels = localLevels.map((lev: WinLevel) => {
+        if (lev.level === win.level && lev.stars < win.stars) {
+          return win;
+        }
+        return lev;
+      });
+      if (!newLevels.find((lev: WinLevel) => lev.level === win.level)) {
+        localStorage.setItem('levels', JSON.stringify([...newLevels, win]));
+      }
+    } else {
+      localStorage.setItem('levels', JSON.stringify([win]));
+    }
+  };
+
   useEffect(() => {
-    const storedBgMusic = localStorage.getItem('bgMusicOn');
-    const storedSfx = localStorage.getItem('sfxOn');
-    if (storedBgMusic !== null) {
-      setBgMusicOn(JSON.parse(storedBgMusic));
+    if (goal && gameOver) {
+      const calculateWin = {
+        stars: calculateStars(),
+        level: goal.level,
+      };
+      setCompleteLevel(calculateWin);
+      setWon(calculateWin);
     }
-    if (storedSfx !== null) {
-      setSfxOn(JSON.parse(storedSfx));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameOver]);
+
+  useEffect(() => {
+    if (goal && displayedScore === score) {
+      calculateStars() > 0 && setGameOver(true);
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayedScore, score]);
 
   useEffect(() => {
     if (bgMusicOn) backgroundSound();
   }, [backgroundSound, bgMusicOn]);
-
-  useEffect(() => {
-    setBoard(generateBoard(10, figures));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (score > displayedScore) {
@@ -260,12 +322,86 @@ const Board = ({
         }
       }, 50);
     }
-  }, [displayedScore, score]);
+  }, [displayedScore, gameOver, score]);
+
+  useEffect(() => {
+    const storedBgMusic = localStorage.getItem('bgMusicOn');
+    const storedSfx = localStorage.getItem('sfxOn');
+    if (storedBgMusic !== null) {
+      setBgMusicOn(JSON.parse(storedBgMusic));
+    }
+    if (storedSfx !== null) {
+      setSfxOn(JSON.parse(storedSfx));
+    }
+    setBoard(generateBoard(size, figures));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.game}>
+      {goal && (
+        <div className={styles.goals}>
+          <h2>Goals</h2>
+          <div className={styles.scores}>
+            <p>
+              Score <b>{goal.score}</b> points to win
+            </p>
+            <p>
+              <span className={styles.stars}>
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+              </span>
+              <b>{goal.stars[1].moves}</b> moves
+            </p>
+            <p>
+              <span className={styles.stars}>
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+              </span>
+              <b>{goal.stars[2].moves}</b> moves
+            </p>
+            <p>
+              <span className={styles.stars}>
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+              </span>
+              <b>{goal.stars[3].moves}</b> moves
+            </p>
+          </div>
+        </div>
+      )}
       <div
-        className={styles.board}
+        className={`${styles.board} ${gameOver ? styles.win : ''}`}
         style={{
           gridTemplateColumns: `repeat(${size}, 3rem)`,
           gridTemplateRows: `repeat(${size}, 3rem)`,
@@ -317,6 +453,8 @@ const Board = ({
                 onTouchStart={(e) => handleTouchStart(e, rowIndex, colIndex)}
                 onTouchEnd={handleTouchEnd}
                 style={{
+                  backgroundColor: gameOver ? '#a9c9aa' : '',
+                  borderColor: gameOver ? '#d498a3' : '',
                   transform: swapInfo
                     ? swapInfo.row1 === rowIndex && swapInfo.col1 === colIndex
                       ? `translate(${(swapInfo.col2 - swapInfo.col1) * 40}px, ${
@@ -361,6 +499,36 @@ const Board = ({
           </div>
         ))}
       </div>
+      {won && (
+        <>
+          <h2 className={styles.won}>Level {won.level} Completed!</h2>
+          <div className={styles.stars}>
+            {[1, 2, 3].map((n) => {
+              if (n <= won.stars) {
+                return (
+                  <Image
+                    key={`Level ${won.level} Star ${n}`}
+                    src='/icons/star-fill.png'
+                    alt='Star Full'
+                    width={16}
+                    height={16}
+                  />
+                );
+              } else {
+                return (
+                  <Image
+                    key={`Level ${won.level} Star ${n}`}
+                    src='/icons/star-empty.png'
+                    alt='Star Empty'
+                    width={16}
+                    height={16}
+                  />
+                );
+              }
+            })}
+          </div>
+        </>
+      )}
       {score > 0 && (
         <div className={styles.score}>
           <span>
@@ -396,7 +564,7 @@ const Board = ({
           />
         </label>
       </div>
-      {score > 0 && (
+      {score > 0 && !gameOver && (
         <button
           className={styles.generate}
           role='button'
@@ -404,6 +572,7 @@ const Board = ({
             setBoard(generateBoard(size, figures));
             setScore(0);
             setDisplayedScore(0);
+            setGameOver(false);
           }}
         >
           Reset

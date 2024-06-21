@@ -1,0 +1,19 @@
+@import 'variables';
+
+.main {
+  @include flex-center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+  height: 100vh;
+  overflow: scroll;
+}
+
+.button {
+  @include button;
+  &:hover,
+  &:active {
+    background-color: $red;
+  }
+}

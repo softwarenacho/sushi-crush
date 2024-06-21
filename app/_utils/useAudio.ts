@@ -4,10 +4,11 @@ const usePoint = (url: string, volume: number = 0.5) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const audioElement = new Audio(url);
-    audioElement.volume = volume;
-
-    audioRef.current = audioElement;
+    if (typeof window !== 'undefined') {
+      const audioElement = new Audio(url);
+      audioElement.volume = volume;
+      audioRef.current = audioElement;
+    }
   }, [url, volume]);
 
   const play = () => {
@@ -16,8 +17,6 @@ const usePoint = (url: string, volume: number = 0.5) => {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
-        }).catch((error) => {
-          console.error('Failed to start playback:', error);
         });
       }
     }

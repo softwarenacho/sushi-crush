@@ -33,6 +33,10 @@
     margin-top: 1rem;
     gap: 1rem;
   }
+  .buttons {
+    @include flex-center;
+    gap: 2rem;
+  }
   .newGame {
     @include button;
     &:hover,

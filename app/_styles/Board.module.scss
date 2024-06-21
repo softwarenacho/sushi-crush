@@ -6,6 +6,28 @@
   align-items: center;
 }
 
+.goals,
+.scores {
+  @include flex-center;
+  flex-direction: column;
+  h2 {
+    margin-bottom: 1rem;
+  }
+  p {
+    @include flex-center;
+  }
+  b {
+    margin: 0 0.5rem;
+  }
+  margin-bottom: 1rem;
+}
+
+.stars {
+  @include flex-center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
 .generate {
   @include button;
 }
@@ -75,6 +97,46 @@
   }
   &.swap {
     z-index: 1;
+  }
+}
+
+.won {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: transparent;
+  transition: color;
+  animation: text-glow 2s ease-in-out infinite;
+}
+
+.win {
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    background: linear-gradient(
+      45deg,
+      $green,
+      $blue,
+      $green,
+      $yellow,
+      $red,
+      $green,
+      $blue,
+      $green,
+      $yellow,
+      $red
+    );
+    background-size: 200%;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    z-index: -1;
+    animation: glow 5s ease-in-out infinite;
+  }
+  &:after {
+    filter: blur(10px);
   }
 }
 
@@ -175,6 +237,41 @@
     transform: scale(1);
     opacity: 0.8;
     box-shadow: 0 0 0.5rem $red, 0 0 1rem $yellow, 0 0 0.5rem $blue;
+  }
+}
+
+@keyframes text-glow {
+  0% {
+    background: linear-gradient(0deg, $red, $black);
+    -webkit-background-clip: text;
+  }
+  25% {
+    background: linear-gradient(45deg, $black, $red);
+    -webkit-background-clip: text;
+  }
+  50% {
+    background: linear-gradient(90deg, $red, $black);
+    -webkit-background-clip: text;
+  }
+  75% {
+    background: linear-gradient(135deg, $black, $red);
+    -webkit-background-clip: text;
+  }
+  100% {
+    background: linear-gradient(180deg, $red, $black);
+    -webkit-background-clip: text;
+  }
+}
+
+@keyframes glow {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: 0 0;
   }
 }
 
