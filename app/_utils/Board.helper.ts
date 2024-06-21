@@ -1,25 +1,23 @@
 import { BoardInterface, Match } from '../_interfaces/Board.interface';
 
-const boardSize = 10;
-const figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'];
+const getRandomFigure = (figures: string[]) => {
+  return figures[Math.floor(Math.random() * figures.length)];
+};
 
-const getRandomFigure = (): string =>
-  figures[Math.floor(Math.random() * figures.length)];
-
-export const generateBoard = (): BoardInterface => {
+export const generateBoard = (boardSize: number, figures: string[]): BoardInterface => {
   let board: BoardInterface = Array(boardSize)
     .fill(null)
-    .map(() => Array(boardSize).fill(null).map(getRandomFigure));
+    .map(() => Array(boardSize).fill(null).map(() => getRandomFigure(figures)));
 
-  while (hasMatches(board)) {
+  while (hasMatches(board, boardSize)) {
     board = Array(boardSize)
       .fill(null)
-      .map(() => Array(boardSize).fill(null).map(getRandomFigure));
+      .map(() => Array(boardSize).fill(null).map(() => getRandomFigure(figures)));
   }
   return board;
 };
 
-const hasMatches = (board: BoardInterface): boolean => {
+const hasMatches = (board: BoardInterface, boardSize: number): boolean => {
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       if (
@@ -106,7 +104,7 @@ export const processMatches = (matches: Match[], newBoard: BoardInterface): numb
   return newScore;
 };
 
-export const fillBoard = (newBoard: BoardInterface) => {
+export const fillBoard = (newBoard: BoardInterface, boardSize: number, figures: string[]) => {
   for (let col = 0; col < boardSize; col++) {
     for (let row = boardSize - 1; row >= 0; row--) {
       if (newBoard[row][col] === null) {
@@ -119,7 +117,7 @@ export const fillBoard = (newBoard: BoardInterface) => {
         }
       }
       if (newBoard[row][col] === null) {
-        newBoard[row][col] = getRandomFigure();
+        newBoard[row][col] = getRandomFigure(figures);
       }
     }
   }

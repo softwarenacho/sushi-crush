@@ -16,7 +16,15 @@ import {
 import useAudio from '../_utils/useAudio';
 import useBgSound from '../_utils/useBackground';
 
-const Board = ({ close }: { close: () => void }) => {
+const Board = ({
+  close,
+  size = 10,
+  figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'],
+}: {
+  close: () => void;
+  size: number;
+  figures: string[];
+}) => {
   const [board, setBoard] = useState<BoardInterface>([]);
   const [score, setScore] = useState<number>(0);
   const [moves, setMoves] = useState<number>(0);
@@ -66,7 +74,7 @@ const Board = ({ close }: { close: () => void }) => {
       if (sfxOn) matchSound();
       setTimeout(() => {
         totalScore += processMatches(foundMatches, newBoard);
-        fillBoard(newBoard);
+        fillBoard(newBoard, size, figures);
         setMatches([]);
         setMatchIndicators([]);
         setBoard([...newBoard]);
@@ -237,7 +245,8 @@ const Board = ({ close }: { close: () => void }) => {
   }, [backgroundSound, bgMusicOn]);
 
   useEffect(() => {
-    setBoard(generateBoard());
+    setBoard(generateBoard(10, figures));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -255,7 +264,13 @@ const Board = ({ close }: { close: () => void }) => {
 
   return (
     <div className={styles.game}>
-      <div className={styles.board}>
+      <div
+        className={styles.board}
+        style={{
+          gridTemplateColumns: `repeat(${size}, 3rem)`,
+          gridTemplateRows: `repeat(${size}, 3rem)`,
+        }}
+      >
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className={styles.row}>
             {row.map((cell, colIndex) => (
@@ -386,7 +401,7 @@ const Board = ({ close }: { close: () => void }) => {
           className={styles.generate}
           role='button'
           onClick={() => {
-            setBoard(generateBoard());
+            setBoard(generateBoard(size, figures));
             setScore(0);
             setDisplayedScore(0);
           }}
