@@ -1,14 +1,15 @@
 'use client';
 
-import Board from '@/app/_components/Board';
-import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import Instructions from './_components/Instructions';
+import Title from './_components/Title';
 import styles from './_styles/page.module.scss';
 
 export default function Home() {
-  const [newGame, setNewGame] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const router = useRouter();
+  const [showInstructions, setInstructions] = useState<boolean>(false);
   const [hideInstructions, setHideInstructions] = useState<boolean>(false);
 
   useEffect(() => {
@@ -23,70 +24,64 @@ export default function Home() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <main className={styles.main}>
-        <Image src='/sushi/onigiri.webp' alt='Onigiri' width={64} height={64} />
-        <h1>Sushi Crush</h1>
-        {!newGame && (
-          <>
-            <p>
-              Dive into the delicious world of <b>Sushi Crush</b>, a delightful
-              match-3 puzzle game built using React and Next.js.
-            </p>
-            <p>
-              Players swap adjacent sushi pieces on a board to create rows or
-              columns of three or more identical pieces.
-            </p>
-            <p>
-              The game continues infinitely to achieve the highest score
-              possible and the best average.
-            </p>
-            <p>
-              Source Code:
-              <a
-                href='https://github.com/softwarenacho/sushi-crush'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                Github
-              </a>
-            </p>
+        <Title title='Sushi Crush' />
+        <p>
+          Dive into the delicious world of <b>Sushi Crush</b>, a delightful
+          match-3 puzzle game built using React and Next.js.
+        </p>
+        <p>
+          Players swap adjacent sushi pieces on a board to create rows or
+          columns of three or more identical pieces.
+        </p>
+        <p>
+          The game continues infinitely to achieve the highest score possible
+          and the best average.
+        </p>
+        <p>
+          Source Code:
+          <a
+            href='https://github.com/softwarenacho/sushi-crush'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Github
+          </a>
+        </p>
+        <div className={styles.buttons}>
+          {hideInstructions ? (
+            <Link href='/infinite' className={styles.newGame} role='button'>
+              Infinite Mode
+            </Link>
+          ) : (
             <button
               className={styles.newGame}
               role='button'
               onClick={() => {
-                if (hideInstructions) {
-                  setNewGame(true);
-                  setIsOpen(false);
-                } else {
-                  setIsOpen(true);
-                }
+                setInstructions(true);
               }}
             >
-              Play
+              Infinite Mode
             </button>
-            <label>
-              <input
-                checked={hideInstructions}
-                onChange={() => setHideInstructions(!hideInstructions)}
-                type='checkbox'
-              />
-              Don{"'"}t show instructions
-            </label>
-            {isOpen && (
-              <Instructions
-                closeModal={() => setIsOpen(false)}
-                openGame={(hide: boolean) => {
-                  setNewGame(true);
-                  setIsOpen(false);
-                  setHideInstructions(hide);
-                }}
-              />
-            )}
-          </>
-        )}
-        {newGame && (
-          <section>
-            <Board close={() => setNewGame(false)} />
-          </section>
+          )}
+          <Link href='/levels' className={styles.newGame} role='button'>
+            Levels
+          </Link>
+        </div>
+        <label>
+          <input
+            checked={hideInstructions}
+            onChange={() => setHideInstructions(!hideInstructions)}
+            type='checkbox'
+          />
+          Don{"'"}t show instructions
+        </label>
+        {showInstructions && (
+          <Instructions
+            closeModal={() => setInstructions(false)}
+            openGame={(hide: boolean) => {
+              router.push('/infinite');
+            }}
+          />
         )}
       </main>
     </Suspense>

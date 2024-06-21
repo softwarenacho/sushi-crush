@@ -245,7 +245,7 @@ const Board = ({
   }, [backgroundSound, bgMusicOn]);
 
   useEffect(() => {
-    setBoard(generateBoard(10, figures));
+    setBoard(generateBoard(size, figures));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -38,6 +38,7 @@ $cell-size: 3rem;
   touch-action: manipulation;
   min-width: 12rem;
   margin-top: 2rem;
+  font-family: inherit;
   @include transition(all);
   &:active {
     background-color: $red;

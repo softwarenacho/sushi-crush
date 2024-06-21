@@ -1,0 +1,9 @@
+@import 'variables';
+
+.main {
+  @include flex-center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+}
