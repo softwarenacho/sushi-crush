@@ -18,6 +18,10 @@
   p {
     max-width: 500px;
     line-height: 2;
+    a {
+      margin-left: 1rem;
+      text-decoration: underline;
+    }
   }
   section {
     @include flex-center;

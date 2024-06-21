@@ -40,6 +40,16 @@ export default function Home() {
               The game continues infinitely to achieve the highest score
               possible and the best average.
             </p>
+            <p>
+              Source Code:
+              <a
+                href='https://github.com/softwarenacho/sushi-crush'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                Github
+              </a>
+            </p>
             <button
               className={styles.newGame}
               role='button'
