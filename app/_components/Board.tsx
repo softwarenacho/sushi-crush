@@ -34,7 +34,8 @@ const Board = ({ close }: { close: () => void }) => {
   } | null>(null);
   const [bgMusicOn, setBgMusicOn] = useState(false);
   const [sfxOn, setSfxOn] = useState(false);
-  const { play: pointSound } = useAudio('/sounds/match.mp3');
+  const { play: matchSound } = useAudio('/sounds/match.mp3');
+  const { play: selectSound } = useAudio('/sounds/select.mp3');
   const { play: backgroundSound, stop: stopBgSound } = useBgSound(
     '/sounds/bg.mp3',
     0.2,
@@ -62,7 +63,7 @@ const Board = ({ close }: { close: () => void }) => {
         foundMatches.map((match) => ({ ...match, score: match.length })),
       );
       setAnimating(true);
-      if (sfxOn) pointSound();
+      if (sfxOn) matchSound();
       setTimeout(() => {
         totalScore += processMatches(foundMatches, newBoard);
         fillBoard(newBoard);
@@ -105,6 +106,7 @@ const Board = ({ close }: { close: () => void }) => {
 
   const handleClick = (row: number, col: number) => {
     if (animating) return;
+    if (sfxOn) selectSound();
     if (selected) {
       const [selectedRow, selectedCol] = selected;
       const isAdyacent =
