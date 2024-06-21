@@ -13,9 +13,7 @@ const useBgSound = (url: string, volume: number = 0.5, loop: boolean = false) =>
 
   const play = () => {
     if (audioRef.current) {
-      audioRef.current.play().catch((error) => {
-        console.error('Failed to start playback:', error);
-      });
+      audioRef.current.play();
     }
   };
 

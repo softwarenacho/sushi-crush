@@ -2,10 +2,27 @@ import Image from 'next/image';
 import { Dispatch, SetStateAction } from 'react';
 import styles from '../_styles/LevelSelector.module.scss';
 
+export interface Star {
+  score?: number;
+  moves?: number;
+  time?: number;
+  average?: number;
+}
+
 export interface Level {
   number: number;
   state: 'played' | 'unlocked' | 'locked';
   stars: number;
+  figures?: string[];
+  goal?: {
+    time?: number;
+    score?: number;
+    stars: {
+      1: Star;
+      2: Star;
+      3: Star;
+    };
+  };
 }
 
 const LevelSelectorModal = ({

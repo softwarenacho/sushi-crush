@@ -15,21 +15,33 @@ import {
 } from '../_utils/Board.helper';
 import useAudio from '../_utils/useAudio';
 import useBgSound from '../_utils/useBackground';
+import { Star } from './LevelSelector';
 
 const Board = ({
   close,
   size = 10,
   figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'],
+  goal,
 }: {
   close: () => void;
   size?: number;
   figures?: string[];
+  goal?: {
+    time?: number;
+    score?: number;
+    stars: {
+      1: Star;
+      2: Star;
+      3: Star;
+    };
+  };
 }) => {
   const [board, setBoard] = useState<BoardInterface>([]);
   const [score, setScore] = useState<number>(0);
   const [moves, setMoves] = useState<number>(0);
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [animating, setAnimating] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
   const [matches, setMatches] = useState<Match[]>([]);
   const [matchIndicators, setMatchIndicators] = useState<MatchIndicator[]>([]);
   const [swapInfo, setSwapInfo] = useState<SwapInfo>(null);
@@ -60,6 +72,24 @@ const Board = ({
     const newValue = !sfxOn;
     setSfxOn(newValue);
     localStorage.setItem('sfxOn', JSON.stringify(newValue));
+  };
+
+  const resolveGoal = () => {
+    if (goal?.score) {
+      if (goal.score <= score) {
+        setGameOver(true);
+        if (goal.stars[3].moves && moves <= goal.stars[3].moves) {
+          // return alert('GOAL ACCOMPLISHED 3 stars');
+        }
+        if (goal.stars[2].moves && moves <= goal.stars[2].moves) {
+          // return alert('GOAL ACCOMPLISHED 2 stars');
+        }
+        if (goal.stars[1].moves && moves <= goal.stars[1].moves) {
+          // return alert('GOAL ACCOMPLISHED 1 star');
+        }
+        // return alert('GAME OVER');
+      }
+    }
   };
 
   const handleMatches = (newBoard: BoardInterface, initialScore: number) => {
@@ -113,6 +143,7 @@ const Board = ({
   };
 
   const handleClick = (row: number, col: number) => {
+    if (gameOver) return;
     if (animating) return;
     if (sfxOn) selectSound();
     if (selected) {
@@ -155,6 +186,7 @@ const Board = ({
     row: number,
     col: number,
   ): void => {
+    if (gameOver) return;
     setFirstCell({
       row,
       col,
@@ -230,27 +262,18 @@ const Board = ({
   };
 
   useEffect(() => {
-    const storedBgMusic = localStorage.getItem('bgMusicOn');
-    const storedSfx = localStorage.getItem('sfxOn');
-    if (storedBgMusic !== null) {
-      setBgMusicOn(JSON.parse(storedBgMusic));
+    if (goal && displayedScore === score) {
+      resolveGoal();
     }
-    if (storedSfx !== null) {
-      setSfxOn(JSON.parse(storedSfx));
-    }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayedScore, score]);
 
   useEffect(() => {
     if (bgMusicOn) backgroundSound();
   }, [backgroundSound, bgMusicOn]);
 
   useEffect(() => {
-    setBoard(generateBoard(size, figures));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (score > displayedScore) {
+    if (!gameOver && score > displayedScore) {
       let currentScore = displayedScore;
       const incrementInterval = setInterval(() => {
         currentScore++;
@@ -260,12 +283,25 @@ const Board = ({
         }
       }, 50);
     }
-  }, [displayedScore, score]);
+  }, [displayedScore, gameOver, score]);
+
+  useEffect(() => {
+    const storedBgMusic = localStorage.getItem('bgMusicOn');
+    const storedSfx = localStorage.getItem('sfxOn');
+    if (storedBgMusic !== null) {
+      setBgMusicOn(JSON.parse(storedBgMusic));
+    }
+    if (storedSfx !== null) {
+      setSfxOn(JSON.parse(storedSfx));
+    }
+    setBoard(generateBoard(size, figures));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.game}>
       <div
-        className={styles.board}
+        className={`${styles.board} ${gameOver ? styles.win : ''}`}
         style={{
           gridTemplateColumns: `repeat(${size}, 3rem)`,
           gridTemplateRows: `repeat(${size}, 3rem)`,
@@ -317,6 +353,8 @@ const Board = ({
                 onTouchStart={(e) => handleTouchStart(e, rowIndex, colIndex)}
                 onTouchEnd={handleTouchEnd}
                 style={{
+                  backgroundColor: gameOver ? '#a9c9aa' : '',
+                  borderColor: gameOver ? '#d498a3' : '',
                   transform: swapInfo
                     ? swapInfo.row1 === rowIndex && swapInfo.col1 === colIndex
                       ? `translate(${(swapInfo.col2 - swapInfo.col1) * 40}px, ${
@@ -361,6 +399,7 @@ const Board = ({
           </div>
         ))}
       </div>
+      {gameOver && <h2 className={styles.won}>Level Completed!</h2>}
       {score > 0 && (
         <div className={styles.score}>
           <span>
@@ -396,7 +435,7 @@ const Board = ({
           />
         </label>
       </div>
-      {score > 0 && (
+      {score > 0 && !gameOver && (
         <button
           className={styles.generate}
           role='button'
@@ -404,6 +443,7 @@ const Board = ({
             setBoard(generateBoard(size, figures));
             setScore(0);
             setDisplayedScore(0);
+            setGameOver(false);
           }}
         >
           Reset

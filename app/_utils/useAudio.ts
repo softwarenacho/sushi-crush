@@ -17,8 +17,6 @@ const usePoint = (url: string, volume: number = 0.5) => {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
-        }).catch((error) => {
-          console.error('Failed to start playback:', error);
         });
       }
     }
