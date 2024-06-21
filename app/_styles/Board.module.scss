@@ -10,9 +10,6 @@
 .scores {
   @include flex-center;
   flex-direction: column;
-  h2 {
-    margin-bottom: 1rem;
-  }
   p {
     @include flex-center;
   }
@@ -57,11 +54,10 @@
 }
 
 .cell {
+  @include flex-center;
   width: $cell-size;
   height: $cell-size;
-  @include flex-center;
   border: 1px dashed $pink-5;
-  font-size: 20px;
   cursor: pointer;
   background-color: $white;
   @include transition(all);
@@ -101,12 +97,29 @@
 }
 
 .won {
-  margin-top: 3rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  color: transparent;
-  transition: color;
-  animation: text-glow 2s ease-in-out infinite;
+  @include flex-center;
+  flex-direction: column;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  h2 {
+    text-align: center;
+    color: transparent;
+    transition: color;
+    animation: text-glow 2s ease-in-out infinite;
+    margin-top: 1rem;
+  }
+  .stars {
+    gap: 0.5rem;
+    img {
+      animation: shake 5s ease infinite;
+    }
+  }
+  .next {
+    background-color: $green;
+    &:hover {
+      background-color: $blue;
+    }
+  }
 }
 
 .win {

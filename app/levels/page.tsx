@@ -17,7 +17,6 @@ const Levels = () => {
   const levels = [
     {
       level: 1,
-      stars: 0,
       figures: firstLevelsFigures,
       size: 5,
       goal: {
@@ -32,9 +31,8 @@ const Levels = () => {
     },
     {
       level: 2,
-      stars: 0,
       figures: firstLevelsFigures,
-      size: 6,
+      size: 5,
       goal: {
         level: 2,
         score: 50,
@@ -47,9 +45,8 @@ const Levels = () => {
     },
     {
       level: 3,
-      stars: 0,
       figures: firstLevelsFigures,
-      size: 6,
+      size: 5,
       goal: {
         level: 3,
         score: 75,
@@ -62,9 +59,8 @@ const Levels = () => {
     },
     {
       level: 4,
-      stars: 0,
       figures: secondLevelsFigures,
-      size: 8,
+      size: 5,
       goal: {
         level: 4,
         score: 50,
@@ -77,9 +73,8 @@ const Levels = () => {
     },
     {
       level: 5,
-      stars: 0,
       figures: secondLevelsFigures,
-      size: 8,
+      size: 6,
       goal: {
         level: 5,
         score: 100,
@@ -92,9 +87,8 @@ const Levels = () => {
     },
     {
       level: 6,
-      stars: 0,
       figures: secondLevelsFigures,
-      size: 8,
+      size: 6,
       goal: {
         level: 6,
         score: 150,
@@ -107,9 +101,8 @@ const Levels = () => {
     },
     {
       level: 7,
-      stars: 0,
-      figures: thirdLevelsFigures,
-      size: 10,
+      figures: secondLevelsFigures,
+      size: 6,
       goal: {
         level: 7,
         score: 100,
@@ -122,31 +115,113 @@ const Levels = () => {
     },
     {
       level: 8,
-      stars: 0,
-      figures: thirdLevelsFigures,
-      size: 10,
+      figures: secondLevelsFigures,
+      size: 7,
       goal: {
         level: 8,
-        score: 150,
+        score: 120,
         stars: {
           1: { moves: 50 },
-          2: { moves: 30 },
-          3: { moves: 20 },
+          2: { moves: 40 },
+          3: { moves: 30 },
         },
       },
     },
     {
       level: 9,
-      stars: 0,
-      figures: thirdLevelsFigures,
-      size: 12,
+      figures: secondLevelsFigures,
+      size: 7,
       goal: {
         level: 9,
+        score: 150,
+        stars: {
+          1: { moves: 80 },
+          2: { moves: 55 },
+          3: { moves: 45 },
+        },
+      },
+    },
+    {
+      level: 10,
+      figures: thirdLevelsFigures,
+      size: 8,
+      goal: {
+        level: 10,
+        score: 175,
+        stars: {
+          1: { moves: 80 },
+          2: { moves: 60 },
+          3: { moves: 45 },
+        },
+      },
+    },
+    {
+      level: 11,
+      figures: thirdLevelsFigures,
+      size: 8,
+      goal: {
+        level: 11,
         score: 200,
         stars: {
           1: { moves: 80 },
+          2: { moves: 60 },
+          3: { moves: 45 },
+        },
+      },
+    },
+    {
+      level: 12,
+      figures: thirdLevelsFigures,
+      size: 8,
+      goal: {
+        level: 12,
+        score: 200,
+        stars: {
+          1: { moves: 60 },
           2: { moves: 50 },
-          3: { moves: 35 },
+          3: { moves: 40 },
+        },
+      },
+    },
+    {
+      level: 13,
+      figures: thirdLevelsFigures,
+      size: 9,
+      goal: {
+        level: 13,
+        score: 200,
+        stars: {
+          1: { moves: 80 },
+          2: { moves: 65 },
+          3: { moves: 50 },
+        },
+      },
+    },
+    {
+      level: 14,
+      figures: thirdLevelsFigures,
+      size: 10,
+      goal: {
+        level: 14,
+        score: 200,
+        stars: {
+          1: { moves: 80 },
+          2: { moves: 55 },
+          3: { moves: 50 },
+        },
+      },
+    },
+    {
+      level: 15,
+      figures: thirdLevelsFigures,
+      size: 10,
+      goal: {
+        level: 15,
+        score: 250,
+        stars: {
+          1: { moves: 90 },
+          2: { moves: 65 },
+          3: { moves: 50 },
         },
       },
     },
@@ -170,12 +245,19 @@ const Levels = () => {
         </>
       )}
       {!!selectedLevel && (
-        <Board
-          close={() => setLevel(0)}
-          size={levels[selectedLevel - 1].size}
-          figures={levels[selectedLevel - 1].figures}
-          goal={levels[selectedLevel - 1].goal}
-        />
+        <div key={selectedLevel}>
+          <Board
+            close={() => setLevel(0)}
+            next={() =>
+              selectedLevel + 1 <= levels.length
+                ? setLevel(selectedLevel + 1)
+                : alert('Thanks for playing. More levels in process...')
+            }
+            size={levels[selectedLevel - 1].size}
+            figures={levels[selectedLevel - 1].figures}
+            goal={levels[selectedLevel - 1].goal}
+          />
+        </div>
       )}
     </main>
   );

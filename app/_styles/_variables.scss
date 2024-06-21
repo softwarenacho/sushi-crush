@@ -9,10 +9,16 @@ $pink-5: #f2b9c4;
 $red: #ff4775;
 $yellow: #ffc640;
 $white: white;
-$cell-size: 40px;
 $transition-duration: 0.5s;
 $bg: rgba(0, 0, 0, 0.7);
 $cell-size: 3rem;
+
+@mixin layout {
+  height: 100vh;
+  overflow: scroll;
+  width: 100vw;
+  overflow-x: hidden;
+}
 
 @mixin flex-center {
   display: flex;

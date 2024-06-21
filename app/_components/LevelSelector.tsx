@@ -12,7 +12,6 @@ export interface Star {
 
 export interface Level {
   level: number;
-  stars: number;
   figures?: string[];
   size: number;
   goal?: {

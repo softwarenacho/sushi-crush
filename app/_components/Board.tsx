@@ -27,10 +27,12 @@ const Board = ({
   size = 10,
   figures = ['onigiri', 'maki', 'nigiri', 'noodle', 'rice', 'temaki'],
   goal,
+  next,
 }: {
   close: () => void;
   size?: number;
   figures?: string[];
+  next?: () => void;
   goal?: {
     level: number;
     time?: number;
@@ -354,7 +356,6 @@ const Board = ({
     <div className={styles.game}>
       {goal && (
         <div className={styles.goals}>
-          <h2>Goals</h2>
           <div className={styles.scores}>
             <p>
               Score <b>{goal.score}</b> points to win
@@ -367,8 +368,20 @@ const Board = ({
                   width={16}
                   height={16}
                 />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
+                <Image
+                  src='/icons/star-fill.png'
+                  alt='Star Full'
+                  width={16}
+                  height={16}
+                />
               </span>
-              <b>{goal.stars[1].moves}</b> moves
+              <b>{goal.stars[3].moves}</b> moves
             </p>
             <p>
               <span className={styles.stars}>
@@ -395,26 +408,14 @@ const Board = ({
                   width={16}
                   height={16}
                 />
-                <Image
-                  src='/icons/star-fill.png'
-                  alt='Star Full'
-                  width={16}
-                  height={16}
-                />
-                <Image
-                  src='/icons/star-fill.png'
-                  alt='Star Full'
-                  width={16}
-                  height={16}
-                />
               </span>
-              <b>{goal.stars[3].moves}</b> moves
+              <b>{goal.stars[1].moves}</b> moves
             </p>
           </div>
         </div>
       )}
       <div
-        className={`${styles.board} ${gameOver ? styles.win : ''}`}
+        className={`${styles.board} ${gameOver ? styles.wi : ''}`}
         style={{
           gridTemplateColumns: `repeat(${size}, 3rem)`,
           gridTemplateRows: `repeat(${size}, 3rem)`,
@@ -513,8 +514,7 @@ const Board = ({
         ))}
       </div>
       {won && (
-        <>
-          <h2 className={styles.won}>Level {won.level} Completed!</h2>
+        <div className={styles.won}>
           <div className={styles.stars}>
             {[1, 2, 3].map((n) => {
               if (n <= won.stars) {
@@ -523,8 +523,8 @@ const Board = ({
                     key={`Level ${won.level} Star ${n}`}
                     src='/icons/star-fill.png'
                     alt='Star Full'
-                    width={16}
-                    height={16}
+                    width={32}
+                    height={32}
                   />
                 );
               } else {
@@ -533,14 +533,24 @@ const Board = ({
                     key={`Level ${won.level} Star ${n}`}
                     src='/icons/star-empty.png'
                     alt='Star Empty'
-                    width={16}
-                    height={16}
+                    width={32}
+                    height={32}
                   />
                 );
               }
             })}
           </div>
-        </>
+          <h2>Level {won.level} Completed!</h2>
+          {/* Add win class for super cool effect */}
+          <div className={styles.win}>
+            <button
+              className={`${styles.generate} ${styles.next}`}
+              onClick={() => next && next()}
+            >
+              Next Level
+            </button>
+          </div>
+        </div>
       )}
       {score > 0 && (
         <div className={styles.score}>
