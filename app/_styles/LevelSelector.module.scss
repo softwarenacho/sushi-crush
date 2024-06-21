@@ -3,7 +3,6 @@
 .modal {
   padding: 20px;
   background-color: $pink-5;
-  border: 1px solid $pink-1;
   max-width: 90vw;
   h2 {
     text-align: center;
@@ -20,13 +19,17 @@
 }
 
 .levelItem {
-  border: 1px solid #ccc;
+  border: 1px solid $pink-1;
   padding: 1rem;
   text-align: center;
   @include flex-center;
   flex-direction: column;
   width: 6rem;
   height: 6rem;
+  box-shadow: $black 4px 4px 0 0;
+  &:hover {
+    box-shadow: $black 6px 6px 0 0;
+  }
 }
 
 .levelNumber {

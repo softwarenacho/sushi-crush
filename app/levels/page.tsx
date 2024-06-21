@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import Board from '../_components/Board';
 import LevelSelector, { Level } from '../_components/LevelSelector';
@@ -31,7 +32,14 @@ const Levels = () => {
             : 'Sushi Crush - Levels'
         }
       />
-      {!selectedLevel && <LevelSelector setLevel={setLevel} levels={levels} />}
+      {!selectedLevel && (
+        <>
+          <LevelSelector setLevel={setLevel} levels={levels} />
+          <Link href='/' className={styles.button} role='button'>
+            Close
+          </Link>
+        </>
+      )}
       {!!selectedLevel && (
         <Board
           close={() => setLevel(0)}

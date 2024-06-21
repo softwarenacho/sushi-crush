@@ -7,3 +7,11 @@
   padding: 2rem;
   gap: 2rem;
 }
+
+.button {
+  @include button;
+  &:hover,
+  &:active {
+    background-color: $red;
+  }
+}
