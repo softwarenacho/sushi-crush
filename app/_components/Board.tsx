@@ -303,7 +303,7 @@ const Board = ({
       };
       setCompleteLevel(calculateWin);
       stopBgSound();
-      playWinSound();
+      if (bgMusicOn) playWinSound();
       setWon(calculateWin);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -343,6 +343,10 @@ const Board = ({
       setSfxOn(JSON.parse(storedSfx));
     }
     setBoard(generateBoard(size, figures));
+    return () => {
+      stopBgSound();
+      stopWinSound();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
