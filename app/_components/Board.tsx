@@ -273,7 +273,7 @@ const Board = ({
   }, [backgroundSound, bgMusicOn]);
 
   useEffect(() => {
-    if (!gameOver && score > displayedScore) {
+    if (score > displayedScore) {
       let currentScore = displayedScore;
       const incrementInterval = setInterval(() => {
         currentScore++;
