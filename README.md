@@ -99,7 +99,7 @@ The game should now be running at http://localhost:3000.
 ## To Do
 
 - Levels Instructions
-- New types of Goals in Levels
+- New types of Goals in Levels (time, specific figures)
 - High Scores
 - Offline
 - Online levels and highscores sync
