@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
+import withSerwistInit from '@serwist/next';
+
+const withSerwist = withSerwistInit({
+  swSrc: 'app/service-worker.ts',
+  swDest: 'public/sw.js',
+});
 
 const nextConfig = {
   reactStrictMode: true,
@@ -7,13 +13,13 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: true,
 };
+
 const nextConfigFunction = async (phase) => {
-  const withPWA = (await import('@ducanh2912/next-pwa')).default({
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-  });
-  return withPWA(nextConfig);
+  const isDev = phase === 'phase-development-server';
+  if (isDev) {
+    return nextConfig;
+  }
+  return withSerwist(nextConfig);
 };
 
 export default nextConfigFunction;
