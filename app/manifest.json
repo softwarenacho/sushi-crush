@@ -74,7 +74,7 @@
       "icons": [
         {
           "src": "/sushi/noodle.webp",
-          "sizes": "96x96",
+          "sizes": "512x512",
           "type": "image/webp"
         }
       ]
@@ -86,7 +86,7 @@
       "icons": [
         {
           "src": "/sushi/rice.webp",
-          "sizes": "96x96",
+          "sizes": "512x512",
           "type": "image/webp"
         }
       ]
