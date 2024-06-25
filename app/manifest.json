@@ -66,6 +66,32 @@
       "label": "UI"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "Infinite",
+      "url": "/infinite",
+      "description": "Play Infinite",
+      "icons": [
+        {
+          "src": "/sushi/noodle.webp",
+          "sizes": "96x96",
+          "type": "image/webp"
+        }
+      ]
+    },
+    {
+      "name": "Levels",
+      "url": "/levels",
+      "description": "Play Levels",
+      "icons": [
+        {
+          "src": "/sushi/rice.webp",
+          "sizes": "96x96",
+          "type": "image/webp"
+        }
+      ]
+    }
+  ],
   "launch_handler": {
     "client_mode": ["focus-existing", "auto"]
   },
