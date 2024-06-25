@@ -46,18 +46,18 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/Mobile 806x1226.webp",
-      "sizes": "806x1226",
-      "type": "image/webp",
-      "form_factor": "narrow",
-      "label": "Mobile"
-    },
-    {
       "src": "/screenshots/Desktop 1356x1012.webp",
       "sizes": "1356x1012",
       "type": "image/webp",
       "form_factor": "wide",
       "label": "Desktop"
+    },
+    {
+      "src": "/screenshots/Mobile 806x1226.webp",
+      "sizes": "806x1226",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Mobile"
     },
     {
       "src": "/screenshots/UI 612x478.webp",
